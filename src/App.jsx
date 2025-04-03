@@ -23,6 +23,7 @@ export default function App() {
         console.error("Error parsing user data:", error);
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId");
       }
     }
   }, []);
