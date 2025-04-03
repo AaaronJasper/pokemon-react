@@ -1,31 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Pokemon from "./Pokemon";
 import logo from "./assets/International_Pokémon_logo.svg.png";
 
-export default function App() {
+export default function Home() {
   const [pokemons, setPokemons] = useState([]);
   const [pokemonImages, setPokemonImages] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
-  // Check if user is logged in when component mounts
-  useEffect(() => {
-    const userData = sessionStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        console.log("User logged in:", parsedUser);
-
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-      }
-    }
-  }, []);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/pokemon")
@@ -62,52 +42,6 @@ export default function App() {
     setSearchQuery(e.target.value);
   };
 
-  const handleLogin = () => {
-    navigate("/login");
-  };
-
-  const handleRegister = () => {
-    navigate("/register");
-  };
-
-  const handleLogout = () => {
-    // Get the token from session storage
-    const token = sessionStorage.getItem("token");
-    
-    // Call the logout API endpoint
-    fetch("http://127.0.0.1:8000/api/user/logout", {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Logout failed");
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Logout successful:", data);
-        // Clear user data and token from session storage
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        // Update state
-        setUser(null);
-        // Redirect to home page
-        navigate("/");
-      })
-      .catch(error => {
-        console.error("Error during logout:", error);
-        // Even if the API call fails, we still want to clear the local session
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        setUser(null);
-        navigate("/");
-      });
-  };
-
   const filteredPokemons = pokemons.filter(
     (pokemon) =>
       pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -132,29 +66,11 @@ export default function App() {
     <div className="container">
       <header className="header">
         <div className="auth-buttons">
-          {user ? (
-            <div className="user-info">
-              <span className="user-name">Welcome, {user.name}</span>
-              <button className="auth-button logout-button" onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
-          ) : (
-            <>
-              <button className="auth-button login-button" onClick={handleLogin}>
-                Login
-              </button>
-              <button
-                className="auth-button register-button"
-                onClick={handleRegister}
-              >
-                Register
-              </button>
-            </>
-          )}
+          <button className="auth-button login-button">Login</button>
+          <button className="auth-button register-button">Register</button>
         </div>
         <img src={logo} alt="Pokemon Logo" className="logo" />
-        <h1>My Pokémon Collection</h1>
+        <h1>Pokémon Collection</h1>
         <div className="search-container">
           <input
             type="text"
