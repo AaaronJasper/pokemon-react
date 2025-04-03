@@ -12,60 +12,55 @@ export default function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Clear any previous errors
     setError("");
-    
-    // Validation
+
+    // Validate form
     if (!name || !email || !password || !passwordConfirmation) {
-      setError("Please fill in all fields");
+      setError("All fields are required");
       return;
     }
-    
+
     if (password !== passwordConfirmation) {
       setError("Passwords do not match");
       return;
     }
-    
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
-      return;
-    }
-    
-    // Log the registration attempt
-    console.log("Registration attempt with:", { 
-      name, 
-      email, 
-      password, 
-      passwordConfirmation 
-    });
-    
-    // Here you would typically make an API call to register the user
+
+    // Call the register API
     fetch("http://127.0.0.1:8000/api/user/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
-        name, 
-        email, 
-        password, 
-        password_confirmation: passwordConfirmation 
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
       }),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Registration failed");
+          return response.json().then((data) => {
+            throw new Error(data.message || "Registration failed");
+          });
         }
         return response.json();
       })
       .then((data) => {
         console.log("Registration successful:", data);
-        // Redirect to login page
-        navigate("/login");
+        // Store token and user data in session storage
+        sessionStorage.setItem("token", data.data.token);
+        sessionStorage.setItem("user", JSON.stringify({
+          id: data.data.id,
+          name: data.data.user,
+          token: data.data.token
+        }));
+        // Redirect to home page
+        navigate("/");
       })
       .catch((error) => {
         console.error("Registration error:", error);
-        setError("Registration failed. Please try again.");
+        setError(error.message || "Registration failed. Please try again.");
       });
   };
 
@@ -74,14 +69,12 @@ export default function Register() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <img src={logo} alt="Pokemon Logo" className="login-logo" />
-        <h1>Register for Pokémon Collection</h1>
-        
+    <div className="auth-container">
+      <div className="auth-form">
+        <img src={logo} alt="Pokemon Logo" className="auth-logo" />
+        <h2>Register</h2>
         {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Name</label>
             <input
@@ -90,10 +83,8 @@ export default function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
-              className="form-input"
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -102,10 +93,8 @@ export default function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="form-input"
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -114,10 +103,8 @@ export default function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="form-input"
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="passwordConfirmation">Confirm Password</label>
             <input
@@ -126,31 +113,22 @@ export default function Register() {
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               placeholder="Confirm your password"
-              className="form-input"
             />
           </div>
-          
-          <div className="form-buttons">
-            <button type="submit" className="login-submit-button">
-              Register
-            </button>
-            <button 
-              type="button" 
-              onClick={handleBackToHome} 
-              className="back-button"
-            >
-              Back to Home
-            </button>
-          </div>
+          <button type="submit" className="auth-button register-button">
+            Register
+          </button>
         </form>
-        
         <div className="auth-links">
-          <p>Already have an account? <button 
-            className="link-button" 
-            onClick={() => navigate("/login")}
-          >
-            Login here
-          </button></p>
+          <p>
+            Already have an account?{" "}
+            <a href="/login" className="auth-link">
+              Login here
+            </a>
+          </p>
+          <a href="/" className="back-button" onClick={handleBackToHome}>
+            Back to Home
+          </a>
         </div>
       </div>
     </div>

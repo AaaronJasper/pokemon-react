@@ -18,7 +18,7 @@ export default function App() {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser);
         console.log("User logged in:", parsedUser);
-
+        console.log("User ID:", parsedUser.id);
       } catch (error) {
         console.error("Error parsing user data:", error);
         sessionStorage.removeItem("user");
@@ -90,9 +90,10 @@ export default function App() {
       })
       .then(data => {
         console.log("Logout successful:", data);
-        // Clear user data and token from session storage
+        // Clear all user data from session storage
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
         // Update state
         setUser(null);
         // Redirect to home page
@@ -103,6 +104,7 @@ export default function App() {
         // Even if the API call fails, we still want to clear the local session
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
         setUser(null);
         navigate("/");
       });

@@ -10,50 +10,48 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Clear any previous errors
     setError("");
-    
-    // Simple validation
+
+    // Validate form
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("All fields are required");
       return;
     }
-    
-    // Log the login attempt
-    console.log("Login attempt with:", { email, password });
-    
-    // Here you would typically make an API call to authenticate
-    // For demonstration, we'll simulate a successful login
-    // In a real app, you would check credentials with your backend
+
+    // Call the login API
     fetch("http://127.0.0.1:8000/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        email,
+        password,
+      }),
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Login failed");
+          return response.json().then((data) => {
+            throw new Error(data.message || "Login failed");
+          });
         }
         return response.json();
       })
       .then((data) => {
         console.log("Login successful:", data);
-        
-        // Store token and user data in sessionStorage
+        // Store token and user data in session storage
         sessionStorage.setItem("token", data.data.token);
         sessionStorage.setItem("user", JSON.stringify({
+          id: data.data.id,
           name: data.data.user,
           token: data.data.token
         }));
-        
-        // Redirect to home page
+        // Navigate to home page
         navigate("/");
       })
       .catch((error) => {
         console.error("Login error:", error);
-        setError("Invalid email or password. Please try again.");
+        setError(error.message || "Login failed. Please try again.");
       });
   };
 
@@ -62,14 +60,12 @@ export default function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        <img src={logo} alt="Pokemon Logo" className="login-logo" />
-        <h1>Login to Pokémon Collection</h1>
-        
+    <div className="auth-container">
+      <div className="auth-form">
+        <img src={logo} alt="Pokemon Logo" className="auth-logo" />
+        <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
-        
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -78,10 +74,8 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="form-input"
             />
           </div>
-          
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -90,31 +84,22 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="form-input"
             />
           </div>
-          
-          <div className="form-buttons">
-            <button type="submit" className="login-submit-button">
-              Login
-            </button>
-            <button 
-              type="button" 
-              onClick={handleBackToHome} 
-              className="back-button"
-            >
-              Back to Home
-            </button>
-          </div>
+          <button type="submit" className="auth-button login-button">
+            Login
+          </button>
         </form>
-        
         <div className="auth-links">
-          <p>Don't have an account? <button 
-            className="link-button" 
-            onClick={() => navigate("/register")}
-          >
-            Register here
-          </button></p>
+          <p>
+            Don't have an account?{" "}
+            <a href="/register" className="auth-link">
+              Register here
+            </a>
+          </p>
+          <a href="/" className="back-button" onClick={handleBackToHome}>
+            Back to Home
+          </a>
         </div>
       </div>
     </div>
