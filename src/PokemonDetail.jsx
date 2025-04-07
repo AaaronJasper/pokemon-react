@@ -11,6 +11,7 @@ export default function PokemonDetail() {
   const [isEditing, setIsEditing] = useState(false);
   const [editedPokemon, setEditedPokemon] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [availableSkills, setAvailableSkills] = useState([]);
 
   useEffect(() => {
     // Get current user from session storage
@@ -49,6 +50,34 @@ export default function PokemonDetail() {
         setError(error.message);
         setLoading(false);
       });
+
+    // Fetch available skills
+    const token = sessionStorage.getItem("token");
+    fetch(`http://127.0.0.1:8000/api/pokemon/${id}/enableSkill`, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch available skills");
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Check if data is an array
+        if (!Array.isArray(data)) {
+          console.error("Invalid skills data format:", data);
+          setAvailableSkills([]);
+          return;
+        }
+        
+        setAvailableSkills(data);
+      })
+      .catch(error => {
+        console.error("Error fetching available skills:", error);
+        setAvailableSkills([]); // Set empty array on error
+      });
   }, [id]);
 
   const handleEdit = () => {
@@ -83,6 +112,7 @@ export default function PokemonDetail() {
       .catch(error => {
         console.error("Error updating Pokémon:", error);
         setError("Failed to update Pokémon");
+        setIsEditing(true);  // Keep editing mode active
       });
   };
 
@@ -105,13 +135,13 @@ export default function PokemonDetail() {
       },
       body: JSON.stringify(skills)
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to update skills");
-        }
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
+        if (data.code !== 201) {
+          // Revert to original skills
+          setEditedPokemon(pokemon);
+          throw new Error(data.message || "Failed to update skills");
+        }
         setPokemon(prev => ({
           ...prev,
           ...data.data
@@ -121,7 +151,10 @@ export default function PokemonDetail() {
       })
       .catch(error => {
         console.error("Error updating skills:", error);
-        setError("Failed to update skills");
+        setError(error.message);
+        // Revert to original skills and exit edit mode
+        setEditedPokemon(pokemon);
+        setIsEditing(false);
       });
   };
 
@@ -133,7 +166,7 @@ export default function PokemonDetail() {
   const handleInputChange = (field, value) => {
     setEditedPokemon(prev => ({
       ...prev,
-      [field]: value
+      [field]: value === "" ? null : value
     }));
   };
 
@@ -250,12 +283,20 @@ export default function PokemonDetail() {
             <div className="info-group">
               <label>Skill 1:</label>
               {isEditing ? (
-                <input
-                  type="text"
+                <select
                   value={editedPokemon.skill1 || ""}
                   onChange={(e) => handleInputChange("skill1", e.target.value)}
                   className="edit-input"
-                />
+                >
+                  {(!editedPokemon.skill1 || editedPokemon.skill1 === "Not Learned") && (
+                    <option value="">Not Learned</option>
+                  )}
+                  {availableSkills.map((skill, index) => (
+                    <option key={index} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <span>{pokemon.skill1 ? pokemon.skill1 : "Not Learned"}</span>
               )}
@@ -263,12 +304,20 @@ export default function PokemonDetail() {
             <div className="info-group">
               <label>Skill 2:</label>
               {isEditing ? (
-                <input
-                  type="text"
+                <select
                   value={editedPokemon.skill2 || ""}
                   onChange={(e) => handleInputChange("skill2", e.target.value)}
                   className="edit-input"
-                />
+                >
+                  {(!editedPokemon.skill2 || editedPokemon.skill2 === "Not Learned") && (
+                    <option value="">Not Learned</option>
+                  )}
+                  {availableSkills.map((skill, index) => (
+                    <option key={index} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <span>{pokemon.skill2 ? pokemon.skill2 : "Not Learned"}</span>
               )}
@@ -276,12 +325,20 @@ export default function PokemonDetail() {
             <div className="info-group">
               <label>Skill 3:</label>
               {isEditing ? (
-                <input
-                  type="text"
+                <select
                   value={editedPokemon.skill3 || ""}
                   onChange={(e) => handleInputChange("skill3", e.target.value)}
                   className="edit-input"
-                />
+                >
+                  {(!editedPokemon.skill3 || editedPokemon.skill3 === "Not Learned") && (
+                    <option value="">Not Learned</option>
+                  )}
+                  {availableSkills.map((skill, index) => (
+                    <option key={index} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <span>{pokemon.skill3 ? pokemon.skill3 : "Not Learned"}</span>
               )}
@@ -289,12 +346,20 @@ export default function PokemonDetail() {
             <div className="info-group">
               <label>Skill 4:</label>
               {isEditing ? (
-                <input
-                  type="text"
+                <select
                   value={editedPokemon.skill4 || ""}
                   onChange={(e) => handleInputChange("skill4", e.target.value)}
                   className="edit-input"
-                />
+                >
+                  {(!editedPokemon.skill4 || editedPokemon.skill4 === "Not Learned") && (
+                    <option value="">Not Learned</option>
+                  )}
+                  {availableSkills.map((skill, index) => (
+                    <option key={index} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <span>{pokemon.skill4 ? pokemon.skill4 : "Not Learned"}</span>
               )}
