@@ -8,8 +8,22 @@ export default function PokemonDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [pokemonImage, setPokemonImage] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedPokemon, setEditedPokemon] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    // Get current user from session storage
+    const userData = sessionStorage.getItem("user");
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setCurrentUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+
     // Fetch Pokémon details
     fetch(`http://127.0.0.1:8000/api/pokemon/${id}`)
       .then((response) => {
@@ -21,7 +35,7 @@ export default function PokemonDetail() {
       .then((res) => {
         const pokemonData = res.data;
         setPokemon(pokemonData);
-        console.log(pokemonData);
+        setEditedPokemon(pokemonData);
         // Fetch Pokémon image from PokeAPI
         return fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonData.race}`);
       })
@@ -37,6 +51,97 @@ export default function PokemonDetail() {
       });
   }, [id]);
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    const token = sessionStorage.getItem("token");
+    
+    // Create a copy of editedPokemon without skills
+    const { skill1, skill2, skill3, skill4, ...pokemonData } = editedPokemon;
+
+    fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(pokemonData)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to update Pokémon");
+        }
+        return response.json();
+      })
+      .then(data => {
+        setPokemon(data.data);
+        setIsEditing(false);
+        setError(null);
+      })
+      .catch(error => {
+        console.error("Error updating Pokémon:", error);
+        setError("Failed to update Pokémon");
+      });
+  };
+
+  const handleSkillUpdate = () => {
+    const token = sessionStorage.getItem("token");
+    
+    // Create skills object
+    const skills = {
+      skill1: editedPokemon.skill1 || null,
+      skill2: editedPokemon.skill2 || null,
+      skill3: editedPokemon.skill3 || null,
+      skill4: editedPokemon.skill4 || null
+    };
+
+    fetch(`http://127.0.0.1:8000/api/pokemon/${id}/skill`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(skills)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to update skills");
+        }
+        return response.json();
+      })
+      .then(data => {
+        setPokemon(prev => ({
+          ...prev,
+          ...data.data
+        }));
+        setIsEditing(false);
+        setError(null);
+      })
+      .catch(error => {
+        console.error("Error updating skills:", error);
+        setError("Failed to update skills");
+      });
+  };
+
+  const handleCancel = () => {
+    setEditedPokemon(pokemon);
+    setIsEditing(false);
+  };
+
+  const handleInputChange = (field, value) => {
+    setEditedPokemon(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleBack = () => {
+    setError(null);
+    setIsEditing(false);
+  };
+
   if (loading) {
     return (
       <div className="pokemon-detail">
@@ -48,10 +153,16 @@ export default function PokemonDetail() {
   if (error) {
     return (
       <div className="pokemon-detail">
-        <div className="error-message">Error: {error}</div>
-        <button className="back-button" onClick={() => navigate("/")}>
-          Back to Home
-        </button>
+        <div className="pokemon-detail-card">
+          <div className="error-message">Error: {error}</div>
+          <div className="action-buttons">
+            <div className="button-row">
+              <button className="back-button" onClick={handleBack}>
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -59,13 +170,21 @@ export default function PokemonDetail() {
   if (!pokemon) {
     return (
       <div className="pokemon-detail">
-        <div className="error-message">Pokémon not found</div>
-        <button className="back-button" onClick={() => navigate("/")}>
-          Back to Home
-        </button>
+        <div className="pokemon-detail-card">
+          <div className="error-message">Pokémon not found</div>
+          <div className="action-buttons">
+            <div className="button-row">
+              <button className="back-button" onClick={handleBack}>
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
+
+  const isOwner = currentUser && currentUser.id === pokemon.user_id;
 
   return (
     <div className="pokemon-detail">
@@ -85,15 +204,42 @@ export default function PokemonDetail() {
             </div>
             <div className="info-group">
               <label>Level:</label>
-              <span>{pokemon.level}</span>
+              {isEditing ? (
+                <input
+                  type="number"
+                  value={editedPokemon.level}
+                  onChange={(e) => handleInputChange("level", parseInt(e.target.value))}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.level}</span>
+              )}
             </div>
             <div className="info-group">
               <label>Nature:</label>
-              <span>{pokemon.nature}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedPokemon.nature}
+                  onChange={(e) => handleInputChange("nature", e.target.value)}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.nature}</span>
+              )}
             </div>
             <div className="info-group">
               <label>Ability:</label>
-              <span>{pokemon.ability}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedPokemon.ability}
+                  onChange={(e) => handleInputChange("ability", e.target.value)}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.ability}</span>
+              )}
             </div>
             <div className="info-group">
               <label>Owner:</label>
@@ -103,25 +249,90 @@ export default function PokemonDetail() {
           <div className="info-section">
             <div className="info-group">
               <label>Skill 1:</label>
-              <span>{pokemon.skill1 ? pokemon.skill1 : "Not Learned"}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedPokemon.skill1 || ""}
+                  onChange={(e) => handleInputChange("skill1", e.target.value)}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.skill1 ? pokemon.skill1 : "Not Learned"}</span>
+              )}
             </div>
             <div className="info-group">
               <label>Skill 2:</label>
-              <span>{pokemon.skill2 ? pokemon.skill2 : "Not Learned"}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedPokemon.skill2 || ""}
+                  onChange={(e) => handleInputChange("skill2", e.target.value)}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.skill2 ? pokemon.skill2 : "Not Learned"}</span>
+              )}
             </div>
             <div className="info-group">
               <label>Skill 3:</label>
-              <span>{pokemon.skill3 ? pokemon.skill3 : "Not Learned"}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedPokemon.skill3 || ""}
+                  onChange={(e) => handleInputChange("skill3", e.target.value)}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.skill3 ? pokemon.skill3 : "Not Learned"}</span>
+              )}
             </div>
             <div className="info-group">
               <label>Skill 4:</label>
-              <span>{pokemon.skill4 ? pokemon.skill4 : "Not Learned"}</span>
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editedPokemon.skill4 || ""}
+                  onChange={(e) => handleInputChange("skill4", e.target.value)}
+                  className="edit-input"
+                />
+              ) : (
+                <span>{pokemon.skill4 ? pokemon.skill4 : "Not Learned"}</span>
+              )}
             </div>
           </div>
         </div>
-        <button className="back-button" onClick={() => navigate("/")}>
-          Back to Home
-        </button>
+        {isOwner && (
+          <div className="action-buttons">
+            {isEditing ? (
+              <>
+                <div className="button-row">
+                  <button className="save-button" onClick={handleSave}>Update Basic Info</button>
+                  <button className="save-button" onClick={handleSkillUpdate}>Update Skills</button>
+                  <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                </div>
+                <button className="back-button" onClick={() => navigate('/')}>
+                  Back
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="button-row">
+                  <button className="edit-button" onClick={handleEdit}>Edit Pokémon</button>
+                </div>
+                <button className="back-button" onClick={() => navigate('/')}>
+                  Back
+                </button>
+              </>
+            )}
+          </div>
+        )}
+        {!isOwner && (
+          <div className="action-buttons">
+            <button className="back-button" onClick={() => navigate('/')}>
+              Back
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
