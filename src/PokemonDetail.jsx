@@ -82,6 +82,7 @@ export default function PokemonDetail() {
 
   const handleEdit = () => {
     setIsEditing(true);
+    setEditedPokemon(pokemon);
   };
 
   const handleSave = () => {
@@ -173,6 +174,7 @@ export default function PokemonDetail() {
   const handleBack = () => {
     setError(null);
     setIsEditing(false);
+    setEditedPokemon(null);
   };
 
   if (loading) {
@@ -240,7 +242,7 @@ export default function PokemonDetail() {
               {isEditing ? (
                 <input
                   type="number"
-                  value={editedPokemon.level}
+                  value={editedPokemon?.level || ""}
                   onChange={(e) => handleInputChange("level", parseInt(e.target.value))}
                   className="edit-input"
                 />
@@ -253,7 +255,7 @@ export default function PokemonDetail() {
               {isEditing ? (
                 <input
                   type="text"
-                  value={editedPokemon.nature}
+                  value={editedPokemon?.nature || ""}
                   onChange={(e) => handleInputChange("nature", e.target.value)}
                   className="edit-input"
                 />
