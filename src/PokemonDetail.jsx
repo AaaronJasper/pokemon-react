@@ -177,6 +177,29 @@ export default function PokemonDetail() {
     setEditedPokemon(null);
   };
 
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this Pokémon? This action cannot be undone.")) {
+      const token = sessionStorage.getItem("token");
+      
+      fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Failed to delete Pokémon");
+          }
+          navigate('/'); // Redirect to home page after successful deletion
+        })
+        .catch(error => {
+          console.error("Error deleting Pokémon:", error);
+          setError("Failed to delete Pokémon");
+        });
+    }
+  };
+
   if (loading) {
     return (
       <div className="pokemon-detail">
@@ -385,6 +408,7 @@ export default function PokemonDetail() {
               <>
                 <div className="button-row">
                   <button className="edit-button" onClick={handleEdit}>Edit Pokémon</button>
+                  <button className="delete-button" onClick={handleDelete} >Delete Pokémon</button>
                 </div>
                 <button className="back-button" onClick={() => navigate('/')}>
                   Back
