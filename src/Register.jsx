@@ -39,14 +39,25 @@ export default function Register() {
       }),
     })
       .then((response) => {
-        if (!response.ok) {
+        if (response.status === 422) {
           return response.json().then((data) => {
-            throw new Error(data.message || "Registration failed");
+            if (data.errors) {
+              const errorMessages = Object.values(data.errors)
+                .flat()
+                .join(", ");
+              throw new Error(errorMessages);
+            }
+            throw new Error(data.message || "Validation failed");
           });
         }
         return response.json();
       })
       .then((data) => {
+        if (data.code !== 200) {
+          throw new Error(data.message || "Registration failed");
+        }
+        
+        // Handle successful registration
         console.log("Registration successful:", data);
         // Store token and user data in session storage
         sessionStorage.setItem("token", data.data.token);
