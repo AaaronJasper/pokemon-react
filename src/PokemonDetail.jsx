@@ -17,7 +17,8 @@ export default function PokemonDetail() {
     pokemonImage,
     updatePokemon,
     updatePokemonSkills,
-    deletePokemon
+    deletePokemon,
+    clearError
   } = usePokemonDetail(id);
   const { availableSkills, loading: skillsLoading, error: skillsError } = useAvailableSkills(id);
 
@@ -81,7 +82,8 @@ export default function PokemonDetail() {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    clearError();
+    navigate(`/pokemon/${id}`);
   };
 
   const handleDelete = async () => {
@@ -128,7 +130,7 @@ export default function PokemonDetail() {
           <div className="error-message">Pokémon not found</div>
           <div className="action-buttons">
             <div className="button-row">
-              <button className="back-button" onClick={handleBack}>
+              <button className="back-button" onClick={() => navigate('/')}>
                 Back
               </button>
             </div>

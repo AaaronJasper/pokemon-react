@@ -6,6 +6,11 @@ export default function usePokemonDetail(id) {
   const [error, setError] = useState(null);
   const [pokemonImage, setPokemonImage] = useState(null);
 
+  // Function to clear error state
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   // Function to fetch Pokémon details
   const fetchPokemonDetails = useCallback(async () => {
     console.log("fetching pokemon details")
@@ -142,6 +147,7 @@ export default function usePokemonDetail(id) {
     pokemonImage,
     updatePokemon,
     updatePokemonSkills,
-    deletePokemon
+    deletePokemon,
+    clearError
   };
 }
