@@ -1,162 +1,71 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useCurrentUser from "./hooks/useCurrentUser";
+import useAvailableSkills from "./hooks/useAvailableSkills";
+import usePokemonDetail from "./hooks/usePokemonDetail";
 
 export default function PokemonDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [pokemon, setPokemon] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [pokemonImage, setPokemonImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedPokemon, setEditedPokemon] = useState(null);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [availableSkills, setAvailableSkills] = useState([]);
+  const currentUser = useCurrentUser();
+  const { 
+    pokemon, 
+    loading, 
+    error, 
+    pokemonImage,
+    updatePokemon,
+    updatePokemonSkills,
+    deletePokemon
+  } = usePokemonDetail(id);
+  const { availableSkills, loading: skillsLoading, error: skillsError } = useAvailableSkills(id);
 
+  // Set editedPokemon when pokemon data is loaded
   useEffect(() => {
-    // Get current user from session storage
-    const userData = sessionStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setCurrentUser(parsedUser);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-      }
+    if (pokemon) {
+      setEditedPokemon(pokemon);
     }
-
-    // Fetch Pokémon details
-    fetch(`http://127.0.0.1:8000/api/pokemon/${id}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Pokemon not found");
-        }
-        return response.json();
-      })
-      .then((res) => {
-        const pokemonData = res.data;
-        setPokemon(pokemonData);
-        setEditedPokemon(pokemonData);
-        // Fetch Pokémon image from PokeAPI
-        return fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonData.race}`);
-      })
-      .then((response) => response.json())
-      .then((pokeData) => {
-        setPokemonImage(pokeData.sprites.other["official-artwork"].front_default);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setError(error.message);
-        setLoading(false);
-      });
-
-    // Fetch available skills
-    const token = sessionStorage.getItem("token");
-    fetch(`http://127.0.0.1:8000/api/pokemon/${id}/enableSkill`, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch available skills");
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Check if data is an array
-        if (!Array.isArray(data)) {
-          console.error("Invalid skills data format:", data);
-          setAvailableSkills([]);
-          return;
-        }
-        
-        setAvailableSkills(data);
-      })
-      .catch(error => {
-        console.error("Error fetching available skills:", error);
-        setAvailableSkills([]); // Set empty array on error
-      });
-  }, [id]);
+  }, [pokemon]);
 
   const handleEdit = () => {
     setIsEditing(true);
     setEditedPokemon(pokemon);
   };
 
-  const handleSave = () => {
-    const token = sessionStorage.getItem("token");
-    
-    // Create a copy of editedPokemon without skills
-    const { skill1, skill2, skill3, skill4, ...pokemonData } = editedPokemon;
-
-    fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify(pokemonData)
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to update Pokémon");
-        }
-        return response.json();
-      })
-      .then(data => {
-        setPokemon(data.data);
-        setIsEditing(false);
-        setError(null);
-      })
-      .catch(error => {
-        console.error("Error updating Pokémon:", error);
-        setError("Failed to update Pokémon");
-        setIsEditing(true);  // Keep editing mode active
-      });
+  const handleSave = async () => {
+    try {
+      // Create a copy of editedPokemon without skills
+      const { skill1, skill2, skill3, skill4, ...pokemonData } = editedPokemon;
+      
+      // Update Pokémon basic info
+      await updatePokemon(pokemonData);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating Pokémon:", error);
+      // Error is already set in the hook
+    }
   };
 
-  const handleSkillUpdate = () => {
-    const token = sessionStorage.getItem("token");
-    
-    // Create skills object
-    const skills = {
-      skill1: editedPokemon.skill1 || null,
-      skill2: editedPokemon.skill2 || null,
-      skill3: editedPokemon.skill3 || null,
-      skill4: editedPokemon.skill4 || null
-    };
-
-    fetch(`http://127.0.0.1:8000/api/pokemon/${id}/skill`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify(skills)
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.code !== 201) {
-          // Revert to original skills
-          setEditedPokemon(pokemon);
-          throw new Error(data.message || "Failed to update skills");
-        }
-        setPokemon(prev => ({
-          ...prev,
-          ...data.data
-        }));
-        setIsEditing(false);
-        setError(null);
-      })
-      .catch(error => {
-        console.error("Error updating skills:", error);
-        setError(error.message);
-        // Revert to original skills and exit edit mode
-        setEditedPokemon(pokemon);
-        setIsEditing(false);
-      });
+  const handleSkillUpdate = async () => {
+    try {
+      // Create skills object
+      const skills = {
+        skill1: editedPokemon.skill1 || null,
+        skill2: editedPokemon.skill2 || null,
+        skill3: editedPokemon.skill3 || null,
+        skill4: editedPokemon.skill4 || null
+      };
+      
+      // Update Pokémon skills
+      await updatePokemonSkills(skills);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating skills:", error);
+      // Error is already set in the hook
+      // Revert to original skills
+      setEditedPokemon(pokemon);
+    }
   };
 
   const handleCancel = () => {
@@ -172,31 +81,18 @@ export default function PokemonDetail() {
   };
 
   const handleBack = () => {
-    setError(null);
-    setIsEditing(false);
-    setEditedPokemon(null);
+    navigate(-1);
   };
 
-  const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this Pokémon? This action cannot be undone.")) {
-      const token = sessionStorage.getItem("token");
-      
-      fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error("Failed to delete Pokémon");
-          }
-          navigate('/'); // Redirect to home page after successful deletion
-        })
-        .catch(error => {
-          console.error("Error deleting Pokémon:", error);
-          setError("Failed to delete Pokémon");
-        });
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this Pokémon?")) {
+      try {
+        await deletePokemon();
+        navigate("/");
+      } catch (error) {
+        console.error("Error deleting Pokémon:", error);
+        // Error is already set in the hook
+      }
     }
   };
 
