@@ -217,10 +217,11 @@ h1 {
 }
 
 .loading {
+  font-size: 1.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
   text-align: center;
-  font-size: 1.2rem;
-  color: #424245;
-  padding: 20px;
+  margin: 2rem 0;
 }
 
 .pokemon-detail form {
