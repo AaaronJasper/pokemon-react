@@ -39,7 +39,7 @@ export default function useAvailableSkills(id) {
         };
 
         fetchSkills();
-    }, [id]); // Only re-fetch when id changes
+    }, [id]); 
 
     return { availableSkills, loading, error };
 }

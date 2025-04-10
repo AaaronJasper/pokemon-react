@@ -12,7 +12,7 @@ export default function usePokemonDetail(id) {
   }, []);
 
   // Function to fetch Pokémon details
-  const fetchPokemonDetails = useCallback(async () => {
+  const fetchPokemonDetails = async () => {
     console.log("fetching pokemon details")
     try {
       setLoading(true);
@@ -38,7 +38,7 @@ export default function usePokemonDetail(id) {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }
 
   // Function to update Pokémon basic info
   const updatePokemon = async (updatedData) => {
@@ -135,10 +135,9 @@ export default function usePokemonDetail(id) {
     }
   };
 
-  // Fetch Pokémon details on mount or when id changes
   useEffect(() => {
     fetchPokemonDetails();
-  }, [fetchPokemonDetails]);
+  }, []);
 
   return { 
     pokemon, 

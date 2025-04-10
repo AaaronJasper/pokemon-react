@@ -2,32 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Pokemon from "./Pokemon";
 import logo from "./assets/International_Pokémon_logo.svg.png";
+import useCurrentUser from "./hooks/useCurrentUser";
 
 export default function App() {
   const [pokemons, setPokemons] = useState([]);
   const [pokemonImages, setPokemonImages] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [user, setUser] = useState(null);
+  const currentUser = useCurrentUser();
   const navigate = useNavigate();
-
-  // Check if user is logged in when component mounts
-  useEffect(() => {
-    const userData = sessionStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-        console.log("User logged in:", parsedUser);
-        console.log("User ID:", parsedUser.id);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userId");
-      }
-    }
-  }, []);
-
+  
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/pokemon")
       .then((response) => response.json())
@@ -135,9 +118,9 @@ export default function App() {
     <div className="container">
       <header className="header">
         <div className="auth-buttons">
-          {user ? (
+          {currentUser ? (
             <div className="user-info">
-              <span className="user-name">Welcome, {user.name}</span>
+              <span className="user-name">Welcome, {currentUser.name}</span>
               <button className="auth-button logout-button" onClick={handleLogout}>
                 Logout
               </button>
