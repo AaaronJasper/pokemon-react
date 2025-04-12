@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
 import PokemonDetail from "./PokemonDetail";
+import CreatePokemon from "./CreatePokemon";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/pokemon/:id" element={<PokemonDetail />} />
+        <Route path="/create_pokemon" element={<CreatePokemon />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Pokemon from "./Pokemon";
 import logo from "./assets/International_Pokémon_logo.svg.png";
 import useCurrentUser from "./hooks/useCurrentUser";
@@ -96,15 +96,12 @@ export default function App() {
             </div>
           ) : (
             <>
-              <button className="auth-button login-button" onClick={handleLogin}>
-                Login
-              </button>
-              <button
-                className="auth-button register-button"
-                onClick={handleRegister}
-              >
-                Register
-              </button>
+              <Link to="/login">
+                <button className="auth-button login-button">Login</button>
+              </Link>
+              <Link to="/register">
+                <button className="auth-button register-button">Register</button>
+              </Link>
             </>
           )}
         </div>
@@ -120,6 +117,15 @@ export default function App() {
           />
         </div>
       </header>
+      
+      {currentUser && (
+        <div className="create-pokemon-button-container">
+          <Link to="/create">
+            <button className="create-pokemon-button">Create New Pokémon</button>
+          </Link>
+        </div>
+      )}
+      
       {filteredPokemons.length === 0 ? (
         <div className="no-results">
           <h2>No Pokémon Found</h2>

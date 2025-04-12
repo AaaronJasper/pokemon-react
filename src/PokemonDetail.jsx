@@ -106,14 +106,14 @@ export default function PokemonDetail() {
     );
   }
 
-  if (error) {
+  if (!pokemon && error) {
     return (
       <div className="pokemon-detail">
         <div className="pokemon-detail-card">
           <div className="error-message">Error: {error}</div>
           <div className="action-buttons">
             <div className="button-row">
-              <button className="back-button" onClick={handleBack}>
+              <button className="back-button" onClick={() => navigate('/')}>
                 Back
               </button>
             </div>
@@ -123,14 +123,14 @@ export default function PokemonDetail() {
     );
   }
 
-  if (!pokemon) {
+  if (error) {
     return (
       <div className="pokemon-detail">
         <div className="pokemon-detail-card">
-          <div className="error-message">Pokémon not found</div>
+          <div className="error-message">Error: {error}</div>
           <div className="action-buttons">
             <div className="button-row">
-              <button className="back-button" onClick={() => navigate('/')}>
+              <button className="back-button" onClick={handleBack}>
                 Back
               </button>
             </div>

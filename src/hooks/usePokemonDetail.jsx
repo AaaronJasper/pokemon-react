@@ -20,12 +20,19 @@ export default function usePokemonDetail(id) {
       
       // Fetch Pokémon details
       const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`);
-      if (!response.ok) {
-        throw new Error("Pokemon not found");
+      const data = await response.json();
+      
+      if (data.code === 404) {
+        setError(data.message);
+        setLoading(false);
+        return;
       }
       
-      const res = await response.json();
-      const pokemonData = res.data;
+      if (!response.ok) {
+        throw new Error(data.message || "Pokemon not found");
+      }
+      
+      const pokemonData = data.data;
       setPokemon(pokemonData);
       
       // Fetch Pokémon image from PokeAPI
@@ -137,7 +144,7 @@ export default function usePokemonDetail(id) {
 
   useEffect(() => {
     fetchPokemonDetails();
-  }, []);
+  }, [id]);
 
   return { 
     pokemon, 
