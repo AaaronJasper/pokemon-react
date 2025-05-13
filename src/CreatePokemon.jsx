@@ -1,25 +1,25 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import useCurrentUser from "./hooks/useCurrentUser";
+import { UserContext } from "./UserContext";
 
 export default function CreatePokemon() {
   const navigate = useNavigate();
-  const currentUser = useCurrentUser();
+  const [currentUser, setCurrentUser] = useContext(UserContext);
   const [formData, setFormData] = useState({
     name: "",
     level: "",
     race: "",
     nature: "",
-    ability: ""
+    ability: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -34,13 +34,13 @@ export default function CreatePokemon() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-      
+
       if (data.code !== 201) {
         throw new Error(data.message || "Failed to create Pokémon");
       }
@@ -148,7 +148,11 @@ export default function CreatePokemon() {
               <button type="submit" className="save-button" disabled={loading}>
                 {loading ? "Creating..." : "Create Pokémon"}
               </button>
-              <button type="button" className="cancel-button" onClick={() => navigate("/")}>
+              <button
+                type="button"
+                className="cancel-button"
+                onClick={() => navigate("/")}
+              >
                 Cancel
               </button>
             </div>

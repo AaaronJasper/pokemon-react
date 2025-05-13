@@ -1,150 +1,42 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import Pokemon from "./Pokemon";
-import logo from "./assets/International_Pokémon_logo.svg.png";
-import useCurrentUser from "./hooks/useCurrentUser";
-import useAllPokemons from "./hooks/useAllPokemons";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Home.jsx";
+import Login from "./Login.jsx";
+import Register from "./Register.jsx";
+import PokemonDetail from "./PokemonDetail";
+import CreatePokemon from "./CreatePokemon";
+import { UserContext } from "./UserContext.jsx";
 
 export default function App() {
-  const { pokemons, pokemonImages } = useAllPokemons();
-  const [searchQuery, setSearchQuery] = useState("");
-  const currentUser = useCurrentUser();
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleLogin = () => {
-    navigate("/login");
-  };
-
-  const handleRegister = () => {
-    navigate("/register");
-  };
-
-  const handleLogout = () => {
-    // Get the token from session storage
-    const token = sessionStorage.getItem("token");
-    
-    // Call the logout API endpoint
-    fetch("http://127.0.0.1:8000/api/user/logout", {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
+  useEffect(() => {
+    // Get current user from session storage
+    const userData = sessionStorage.getItem("user");
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setUser(null);
       }
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Logout failed");
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Logout successful:", data);
-        // Clear all user data from session storage
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
-        // Update state
-        setUser(null);
-        // Redirect to home page
-        navigate("/");
-      })
-      .catch(error => {
-        console.error("Error during logout:", error);
-        // Even if the API call fails, we still want to clear the local session
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
-        setUser(null);
-        navigate("/");
-      });
-  };
-
-  const filteredPokemons = pokemons.filter(
-    (pokemon) =>
-      pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pokemon.race.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pokemon.nature.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pokemon.ability.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pokemon.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pokemon.level.toString().includes(searchQuery)
-  );
-
-  const pokemonElements = filteredPokemons.map((pokemon) => {
-    return (
-      <Pokemon
-        key={pokemon.id}
-        pokemon={pokemon}
-        image={pokemonImages[pokemon.race]}
-      />
-    );
-  });
+    }
+  }, []); // Empty dependency array means this only runs once on mount
 
   return (
-    <div className="container">
-      <header className="header">
-        <div className="auth-buttons">
-          {currentUser ? (
-            <div className="user-info">
-              <span className="user-name">Welcome, {currentUser.name}</span>
-              <button className="auth-button logout-button" onClick={handleLogout}>
-                Logout
-              </button>
-            </div>
-          ) : (
-            <>
-              <Link to="/login">
-                <button className="auth-button login-button">Login</button>
-              </Link>
-              <Link to="/register">
-                <button className="auth-button register-button">Register</button>
-              </Link>
-            </>
-          )}
-        </div>
-        <img src={logo} alt="Pokemon Logo" className="logo" />
-        <h1>My Pokémon Collection</h1>
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search by name, race, nature, ability, user, or level..."
-            value={searchQuery}
-            onChange={handleSearch}
-            className="search-input"
-          />
-        </div>
-      </header>
-      
-      {currentUser && (
-        <div className="create-pokemon-button-container">
-          <Link to="/create">
-            <button className="create-pokemon-button">Create New Pokémon</button>
-          </Link>
-        </div>
-      )}
-      
-      {filteredPokemons.length === 0 ? (
-        <div className="no-results">
-          <h2>No Pokémon Found</h2>
-          <p>
-            Try searching by:
-            <ul>
-              <li>Pokémon name</li>
-              <li>Race</li>
-              <li>Nature</li>
-              <li>Ability</li>
-              <li>User</li>
-              <li>Level</li>
-            </ul>
-            Check if there are any typos or try different search terms.
-          </p>
-        </div>
-      ) : (
-        <div className="pokemon-grid">{pokemonElements}</div>
-      )}
-    </div>
+    <React.StrictMode>
+      <BrowserRouter>
+        <UserContext.Provider value={[user, setUser]}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/pokemon/:id" element={<PokemonDetail />} />
+            <Route path="/create_pokemon" element={<CreatePokemon />} />
+          </Routes>
+        </UserContext.Provider>
+      </BrowserRouter>
+    </React.StrictMode>
   );
 }

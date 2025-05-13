@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useCurrentUser from "./hooks/useCurrentUser";
+import { UserContext } from "./UserContext";
 import useAvailableSkills from "./hooks/useAvailableSkills";
 import usePokemonDetail from "./hooks/usePokemonDetail";
 
@@ -9,18 +9,22 @@ export default function PokemonDetail() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [editedPokemon, setEditedPokemon] = useState(null);
-  const currentUser = useCurrentUser();
-  const { 
-    pokemon, 
-    loading, 
-    error, 
+  const [currentUser, setCurrentUser] = useContext(UserContext);
+  const {
+    pokemon,
+    loading,
+    error,
     pokemonImage,
     updatePokemon,
     updatePokemonSkills,
     deletePokemon,
-    clearError
+    clearError,
   } = usePokemonDetail(id);
-  const { availableSkills, loading: skillsLoading, error: skillsError } = useAvailableSkills(id);
+  const {
+    availableSkills,
+    loading: skillsLoading,
+    error: skillsError,
+  } = useAvailableSkills(id);
 
   // Set editedPokemon when pokemon data is loaded
   useEffect(() => {
@@ -38,7 +42,7 @@ export default function PokemonDetail() {
     try {
       // Create a copy of editedPokemon without skills
       const { skill1, skill2, skill3, skill4, ...pokemonData } = editedPokemon;
-      
+
       // Update Pokémon basic info
       await updatePokemon(pokemonData);
       setIsEditing(false);
@@ -55,9 +59,9 @@ export default function PokemonDetail() {
         skill1: editedPokemon.skill1 || null,
         skill2: editedPokemon.skill2 || null,
         skill3: editedPokemon.skill3 || null,
-        skill4: editedPokemon.skill4 || null
+        skill4: editedPokemon.skill4 || null,
       };
-      
+
       // Update Pokémon skills
       await updatePokemonSkills(skills);
       setIsEditing(false);
@@ -75,9 +79,9 @@ export default function PokemonDetail() {
   };
 
   const handleInputChange = (field, value) => {
-    setEditedPokemon(prev => ({
+    setEditedPokemon((prev) => ({
       ...prev,
-      [field]: value === "" ? null : value
+      [field]: value === "" ? null : value,
     }));
   };
 
@@ -113,7 +117,7 @@ export default function PokemonDetail() {
           <div className="error-message">Error: {error}</div>
           <div className="action-buttons">
             <div className="button-row">
-              <button className="back-button" onClick={() => navigate('/')}>
+              <button className="back-button" onClick={() => navigate("/")}>
                 Back
               </button>
             </div>
@@ -146,12 +150,7 @@ export default function PokemonDetail() {
     <div className="pokemon-detail">
       <div className="pokemon-detail-card">
         <h2>{pokemon.name}</h2>
-        {pokemonImage && (
-          <img 
-            src={pokemonImage} 
-            alt={pokemon.name} 
-          />
-        )}
+        {pokemonImage && <img src={pokemonImage} alt={pokemon.name} />}
         <div className="pokemon-info">
           <div className="info-section">
             <div className="info-group">
@@ -164,7 +163,9 @@ export default function PokemonDetail() {
                 <input
                   type="number"
                   value={editedPokemon?.level || ""}
-                  onChange={(e) => handleInputChange("level", parseInt(e.target.value))}
+                  onChange={(e) =>
+                    handleInputChange("level", parseInt(e.target.value))
+                  }
                   className="edit-input"
                 />
               ) : (
@@ -211,7 +212,8 @@ export default function PokemonDetail() {
                   onChange={(e) => handleInputChange("skill1", e.target.value)}
                   className="edit-input"
                 >
-                  {(!editedPokemon.skill1 || editedPokemon.skill1 === "Not Learned") && (
+                  {(!editedPokemon.skill1 ||
+                    editedPokemon.skill1 === "Not Learned") && (
                     <option value="">Not Learned</option>
                   )}
                   {availableSkills.map((skill, index) => (
@@ -232,7 +234,8 @@ export default function PokemonDetail() {
                   onChange={(e) => handleInputChange("skill2", e.target.value)}
                   className="edit-input"
                 >
-                  {(!editedPokemon.skill2 || editedPokemon.skill2 === "Not Learned") && (
+                  {(!editedPokemon.skill2 ||
+                    editedPokemon.skill2 === "Not Learned") && (
                     <option value="">Not Learned</option>
                   )}
                   {availableSkills.map((skill, index) => (
@@ -253,7 +256,8 @@ export default function PokemonDetail() {
                   onChange={(e) => handleInputChange("skill3", e.target.value)}
                   className="edit-input"
                 >
-                  {(!editedPokemon.skill3 || editedPokemon.skill3 === "Not Learned") && (
+                  {(!editedPokemon.skill3 ||
+                    editedPokemon.skill3 === "Not Learned") && (
                     <option value="">Not Learned</option>
                   )}
                   {availableSkills.map((skill, index) => (
@@ -274,7 +278,8 @@ export default function PokemonDetail() {
                   onChange={(e) => handleInputChange("skill4", e.target.value)}
                   className="edit-input"
                 >
-                  {(!editedPokemon.skill4 || editedPokemon.skill4 === "Not Learned") && (
+                  {(!editedPokemon.skill4 ||
+                    editedPokemon.skill4 === "Not Learned") && (
                     <option value="">Not Learned</option>
                   )}
                   {availableSkills.map((skill, index) => (
@@ -294,21 +299,31 @@ export default function PokemonDetail() {
             {isEditing ? (
               <>
                 <div className="button-row">
-                  <button className="save-button" onClick={handleSave}>Update Basic Info</button>
-                  <button className="save-button" onClick={handleSkillUpdate}>Update Skills</button>
-                  <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                  <button className="save-button" onClick={handleSave}>
+                    Update Basic Info
+                  </button>
+                  <button className="save-button" onClick={handleSkillUpdate}>
+                    Update Skills
+                  </button>
+                  <button className="cancel-button" onClick={handleCancel}>
+                    Cancel
+                  </button>
                 </div>
-                <button className="back-button" onClick={() => navigate('/')}>
+                <button className="back-button" onClick={() => navigate("/")}>
                   Back
                 </button>
               </>
             ) : (
               <>
                 <div className="button-row">
-                  <button className="edit-button" onClick={handleEdit}>Edit Pokémon</button>
-                  <button className="delete-button" onClick={handleDelete} >Delete Pokémon</button>
+                  <button className="edit-button" onClick={handleEdit}>
+                    Edit Pokémon
+                  </button>
+                  <button className="delete-button" onClick={handleDelete}>
+                    Delete Pokémon
+                  </button>
                 </div>
-                <button className="back-button" onClick={() => navigate('/')}>
+                <button className="back-button" onClick={() => navigate("/")}>
                   Back
                 </button>
               </>
@@ -317,7 +332,7 @@ export default function PokemonDetail() {
         )}
         {!isOwner && (
           <div className="action-buttons">
-            <button className="back-button" onClick={() => navigate('/')}>
+            <button className="back-button" onClick={() => navigate("/")}>
               Back
             </button>
           </div>
@@ -325,4 +340,4 @@ export default function PokemonDetail() {
       </div>
     </div>
   );
-} 
+}

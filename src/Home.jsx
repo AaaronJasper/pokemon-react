@@ -1,45 +1,66 @@
-import { useEffect, useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import Pokemon from "./Pokemon";
 import logo from "./assets/International_Pokémon_logo.svg.png";
+import useAllPokemons from "./hooks/useAllPokemons";
+import { UserContext } from "./UserContext";
 
-export default function Home() {
-  const [pokemons, setPokemons] = useState([]);
-  const [pokemonImages, setPokemonImages] = useState({});
+export default function App() {
+  const { pokemons, pokemonImages } = useAllPokemons();
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/pokemon")
-      .then((response) => response.json())
-      .then(async (res) => {
-        const pokemonData = res.data.data;
-        setPokemons(pokemonData);
-
-        // 批量請求所有 Pokémon 的圖片
-        const imageRequests = pokemonData.map((pokemon) =>
-          fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.race}`)
-            .then((res) => res.json())
-            .then((pokeData) => ({
-              race: pokemon.race,
-              image: pokeData.sprites.other["official-artwork"].front_default,
-            }))
-        );
-
-        // 等待所有請求完成
-        const images = await Promise.all(imageRequests);
-
-        // 轉換成 { name: imageUrl } 格式
-        const imageMap = images.reduce((acc, item) => {
-          acc[item.race] = item.image;
-          return acc;
-        }, {});
-
-        setPokemonImages(imageMap);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
+  const [currentUser, setCurrentUser] = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
+  const handleLogout = () => {
+    // Get the token from session storage
+    const token = sessionStorage.getItem("token");
+
+    // Call the logout API endpoint
+    fetch("http://127.0.0.1:8000/api/user/logout", {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Logout failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Logout successful:", data);
+        // Clear all user data from session storage
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
+        // Update state
+        setCurrentUser(null);
+        // Redirect to home page
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error during logout:", error);
+        // Even if the API call fails, we still want to clear the local session
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
+        setCurrentUser(null);
+        navigate("/");
+      });
   };
 
   const filteredPokemons = pokemons.filter(
@@ -66,11 +87,31 @@ export default function Home() {
     <div className="container">
       <header className="header">
         <div className="auth-buttons">
-          <button className="auth-button login-button">Login</button>
-          <button className="auth-button register-button">Register</button>
+          {currentUser ? (
+            <div className="user-info">
+              <span className="user-name">Welcome, {currentUser.name}</span>
+              <button
+                className="auth-button logout-button"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link to="/login">
+                <button className="auth-button login-button">Login</button>
+              </Link>
+              <Link to="/register">
+                <button className="auth-button register-button">
+                  Register
+                </button>
+              </Link>
+            </>
+          )}
         </div>
         <img src={logo} alt="Pokemon Logo" className="logo" />
-        <h1>Pokémon Collection</h1>
+        <h1>My Pokémon Collection</h1>
         <div className="search-container">
           <input
             type="text"
@@ -81,6 +122,17 @@ export default function Home() {
           />
         </div>
       </header>
+
+      {currentUser && (
+        <div className="create-pokemon-button-container">
+          <Link to="/create">
+            <button className="create-pokemon-button">
+              Create New Pokémon
+            </button>
+          </Link>
+        </div>
+      )}
+
       {filteredPokemons.length === 0 ? (
         <div className="no-results">
           <h2>No Pokémon Found</h2>

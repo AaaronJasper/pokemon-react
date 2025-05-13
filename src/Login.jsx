@@ -1,33 +1,30 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "./assets/International_Pokémon_logo.svg.png";
+import { UserContext } from "./UserContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [user, setUser] = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
 
-    // Validate form
     if (!email || !password) {
       setError("All fields are required");
       return;
     }
 
-    // Call the login API
     fetch("http://127.0.0.1:8000/api/user/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+      body: JSON.stringify({ email, password }),
     })
       .then((response) => {
         if (response.status === 422) {
@@ -47,17 +44,22 @@ export default function Login() {
         if (data.code !== 200) {
           throw new Error(data.message || "Login failed");
         }
-        
-        // Handle successful login
-        console.log("Login successful:", data);
-        // Store token and user data in session storage
-        sessionStorage.setItem("token", data.data.token);
-        sessionStorage.setItem("user", JSON.stringify({
+
+        // ✅ 解析後端傳回資料
+        const userData = {
           id: data.data.id,
-          name: data.data.user,
-          token: data.data.token
-        }));
-        // Navigate to home page
+          name: data.data.user, // 確保這是名字不是整個 user object
+          token: data.data.token,
+        };
+
+        // ✅ 存入 sessionStorage
+        sessionStorage.setItem("token", userData.token);
+        sessionStorage.setItem("user", JSON.stringify(userData));
+
+        // ✅ 更新 Context
+        setUser(userData);
+
+        // ✅ 導回首頁
         navigate("/");
       })
       .catch((error) => {
@@ -66,7 +68,8 @@ export default function Login() {
       });
   };
 
-  const handleBackToHome = () => {
+  const handleBackToHome = (e) => {
+    e.preventDefault();
     navigate("/");
   };
 
