@@ -111,7 +111,7 @@ export default function App() {
           )}
         </div>
         <img src={logo} alt="Pokemon Logo" className="logo" />
-        <h1>My Pokémon Collection</h1>
+        <h1>Pokémon Collection</h1>
         <div className="search-container">
           <input
             type="text"
@@ -125,7 +125,7 @@ export default function App() {
 
       {currentUser && (
         <div className="create-pokemon-button-container">
-          <Link to="/create">
+          <Link to="/create_pokemon">
             <button className="create-pokemon-button">
               Create New Pokémon
             </button>

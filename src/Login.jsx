@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "./assets/International_Pokémon_logo.svg.png";
 import { UserContext } from "./UserContext";
 
@@ -33,7 +33,7 @@ export default function Login() {
               const errorMessages = Object.values(data.errors)
                 .flat()
                 .join(", ");
-              throw new Error(errorMessages);
+              throw new Error("Validation failed");
             }
             throw new Error(data.message || "Validation failed");
           });
@@ -42,29 +42,25 @@ export default function Login() {
       })
       .then((data) => {
         if (data.code !== 200) {
-          throw new Error(data.message || "Login failed");
+          throw new Error("Login failed. Please try again.");
         }
 
-        // ✅ 解析後端傳回資料
         const userData = {
           id: data.data.id,
-          name: data.data.user, // 確保這是名字不是整個 user object
+          name: data.data.user,
           token: data.data.token,
         };
 
-        // ✅ 存入 sessionStorage
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("user", JSON.stringify(userData));
 
-        // ✅ 更新 Context
         setUser(userData);
 
-        // ✅ 導回首頁
         navigate("/");
       })
       .catch((error) => {
         console.error("Login error:", error);
-        setError(error.message || "Login failed. Please try again.");
+        setError("Login failed. Please try again.");
       });
   };
 
@@ -76,7 +72,9 @@ export default function Login() {
   return (
     <div className="auth-container">
       <div className="auth-form">
-        <img src={logo} alt="Pokemon Logo" className="auth-logo" />
+        <Link to="/">
+          <img src={logo} alt="Pokemon Logo" className="auth-logo" />
+        </Link>
         <h2>Login</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>

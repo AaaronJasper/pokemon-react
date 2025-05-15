@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import logo from "./assets/International_Pokémon_logo.svg.png";
+import { UserContext } from "./UserContext";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -9,6 +10,8 @@ export default function Register() {
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [user, setUser] = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,6 +28,7 @@ export default function Register() {
       return;
     }
 
+    setLoading(true);
     // Call the register API
     fetch("http://127.0.0.1:8000/api/user/register", {
       method: "POST",
@@ -53,25 +57,31 @@ export default function Register() {
         return response.json();
       })
       .then((data) => {
-        if (data.code !== 200) {
-          throw new Error(data.message || "Registration failed");
+        if (data.code !== 201) {
+          throw new Error("Registration failed. Please try again");
         }
-        
+
         // Handle successful registration
         console.log("Registration successful:", data);
-        // Store token and user data in session storage
-        sessionStorage.setItem("token", data.data.token);
-        sessionStorage.setItem("user", JSON.stringify({
+
+        const userData = {
           id: data.data.id,
           name: data.data.user,
-          token: data.data.token
-        }));
+          token: data.data.token,
+        };
+        // Store token and user data in session storage
+        sessionStorage.setItem("token", userData.token);
+        sessionStorage.setItem("user", JSON.stringify(userData));
+
+        setUser(userData);
+        setLoading(false);
         // Redirect to home page
         navigate("/");
       })
       .catch((error) => {
         console.error("Registration error:", error);
-        setError(error.message || "Registration failed. Please try again.");
+        setError("Registration failed. Please try again.");
+        setLoading(false);
       });
   };
 
@@ -82,7 +92,9 @@ export default function Register() {
   return (
     <div className="auth-container">
       <div className="auth-form">
-        <img src={logo} alt="Pokemon Logo" className="auth-logo" />
+        <Link to="/">
+          <img src={logo} alt="Pokemon Logo" className="auth-logo" />
+        </Link>
         <h2>Register</h2>
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
@@ -126,8 +138,12 @@ export default function Register() {
               placeholder="Confirm your password"
             />
           </div>
-          <button type="submit" className="auth-button register-button">
-            Register
+          <button
+            type="submit"
+            className="auth-button register-button"
+            disabled={loading}
+          >
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
         <div className="auth-links">

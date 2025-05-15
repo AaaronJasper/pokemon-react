@@ -19,7 +19,7 @@ export default function CreatePokemon() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value.toLowerCase(),
     }));
   };
 
@@ -42,14 +42,15 @@ export default function CreatePokemon() {
       const data = await response.json();
 
       if (data.code !== 201) {
-        throw new Error(data.message || "Failed to create Pokémon");
+        setError(data.message);
+        setLoading(false);
+        return;
       }
 
+      setLoading(false);
       navigate(`/pokemon/${data.data.id}`);
     } catch (error) {
-      console.error("Error creating Pokémon:", error);
-      setError(error.message);
-    } finally {
+      setError("Error creating Pokémon");
       setLoading(false);
     }
   };
