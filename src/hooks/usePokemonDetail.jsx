@@ -13,30 +13,31 @@ export default function usePokemonDetail(id) {
 
   // Function to fetch Pokémon details
   const fetchPokemonDetails = async () => {
-    console.log("fetching pokemon details")
     try {
       setLoading(true);
       setError(null);
-      
+
       // Fetch Pokémon details
       const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`);
       const data = await response.json();
-      
+
       if (data.code === 404) {
         setError(data.message);
         setLoading(false);
         return;
       }
-      
+
       if (!response.ok) {
         throw new Error(data.message || "Pokemon not found");
       }
-      
+
       const pokemonData = data.data;
       setPokemon(pokemonData);
-      
+
       // Fetch Pokémon image from PokeAPI
-      const imageResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonData.race}`);
+      const imageResponse = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokemonData.race}`
+      );
       const pokeData = await imageResponse.json();
       setPokemonImage(pokeData.sprites.other["official-artwork"].front_default);
     } catch (error) {
@@ -45,30 +46,39 @@ export default function usePokemonDetail(id) {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   // Function to update Pokémon basic info
   const updatePokemon = async (updatedData) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const token = sessionStorage.getItem("token");
       const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedData)
+        body: JSON.stringify(updatedData),
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to update Pokémon");
       }
-      
+
       const data = await response.json();
-      setPokemon(data.data);
+      const pokemonData = data.data;
+      setPokemon(pokemonData);
+
+      // Fetch Pokémon image from PokeAPI
+      const imageResponse = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokemonData.race}`
+      );
+      const pokeData = await imageResponse.json();
+      setPokemonImage(pokeData.sprites.other["official-artwork"].front_default);
+
       return data.data;
     } catch (error) {
       console.error("Error updating Pokémon:", error);
@@ -84,25 +94,28 @@ export default function usePokemonDetail(id) {
     try {
       setLoading(true);
       setError(null);
-      
+
       const token = sessionStorage.getItem("token");
-      const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}/skill`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(skills)
-      });
-      
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/pokemon/${id}/skill`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(skills),
+        }
+      );
+
       const data = await response.json();
       if (data.code !== 201) {
         throw new Error(data.message || "Failed to update skills");
       }
-      
-      setPokemon(prev => ({
+
+      setPokemon((prev) => ({
         ...prev,
-        ...data.data
+        ...data.data,
       }));
       return data.data;
     } catch (error) {
@@ -119,19 +132,19 @@ export default function usePokemonDetail(id) {
     try {
       setLoading(true);
       setError(null);
-      
+
       const token = sessionStorage.getItem("token");
       const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       if (!response.ok) {
         throw new Error("Failed to delete Pokémon");
       }
-      
+
       return true; // Return true on successful deletion
     } catch (error) {
       console.error("Error deleting Pokémon:", error);
@@ -146,14 +159,14 @@ export default function usePokemonDetail(id) {
     fetchPokemonDetails();
   }, [id]);
 
-  return { 
-    pokemon, 
-    loading, 
-    error, 
+  return {
+    pokemon,
+    loading,
+    error,
     pokemonImage,
     updatePokemon,
     updatePokemonSkills,
     deletePokemon,
-    clearError
+    clearError,
   };
 }
