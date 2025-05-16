@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: url('/src/assets/Poke_card.jpg');
+  background-image: url("/src/assets/Poke_card.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -12,7 +12,8 @@ body {
 .container {
   text-align: center;
   padding: 20px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   background-color: rgba(255, 255, 255, 0.9);
   min-height: 100vh;
 }
@@ -55,8 +56,8 @@ body {
 
 .login-button {
   background-color: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
+  color: #007aff;
+  border: 2px solid #007aff;
 }
 
 .login-button:hover {
@@ -64,7 +65,7 @@ body {
 }
 
 .register-button {
-  background-color: #007AFF;
+  background-color: #007aff;
   color: white;
 }
 
@@ -86,7 +87,8 @@ body {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   transition: all 0.3s ease;
   cursor: pointer;
   backdrop-filter: blur(5px);
@@ -109,7 +111,8 @@ body {
   font-weight: 600;
   margin: 10px 0;
   color: #1d1d1f;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .pokemon-card h3 {
@@ -117,7 +120,8 @@ body {
   font-weight: 500;
   color: #424245;
   margin: 5px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .pokemon-card p {
@@ -125,7 +129,8 @@ body {
   line-height: 1.5;
   color: #424245;
   margin: 8px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 h1 {
@@ -133,7 +138,8 @@ h1 {
   font-weight: 700;
   color: #1d1d1f;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -154,7 +160,8 @@ h1 {
   width: 100%;
   max-width: 500px;
   backdrop-filter: blur(5px);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -166,7 +173,8 @@ h1 {
   color: #1d1d1f;
   margin-bottom: 20px;
   text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .pokemon-detail-card img {
@@ -207,19 +215,22 @@ h1 {
 .info-group label {
   font-weight: 500;
   color: #424245;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   margin-bottom: 2px;
 }
 
 .info-group span {
   color: #1d1d1f;
   font-weight: 600;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .loading {
   font-size: 1.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   font-weight: 500;
   text-align: center;
   margin: 2rem 0;
@@ -245,7 +256,7 @@ h1 {
 
 .pokemon-detail button {
   padding: 10px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 4px;
@@ -271,11 +282,12 @@ h1 {
   outline: none;
   transition: all 0.3s ease;
   background: rgba(255, 255, 255, 0.9);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .search-input:focus {
-  border-color: #007AFF;
+  border-color: #007aff;
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
@@ -320,7 +332,7 @@ h1 {
   background: rgba(0, 122, 255, 0.1);
   padding: 8px 16px;
   border-radius: 20px;
-  color: #007AFF;
+  color: #007aff;
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -332,7 +344,7 @@ h1 {
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background-image: url('/src/assets/360.png');
+  background-image: url("/src/assets/360.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -391,7 +403,7 @@ h1 {
 }
 
 .form-input:focus {
-  border-color: #007AFF;
+  border-color: #007aff;
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
 }
 
@@ -403,7 +415,7 @@ h1 {
 }
 
 .login-submit-button {
-  background-color: #007AFF;
+  background-color: #007aff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -420,8 +432,8 @@ h1 {
 
 .back-button {
   background-color: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
+  color: #007aff;
+  border: 2px solid #007aff;
   border-radius: 8px;
   padding: 12px;
   font-size: 1rem;
@@ -444,7 +456,8 @@ h1 {
   font-weight: 500;
   max-width: 400px;
   border: 1px solid rgba(255, 59, 48, 0.2);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -457,7 +470,7 @@ h1 {
 .link-button {
   background: none;
   border: none;
-  color: #007AFF;
+  color: #007aff;
   font-weight: 500;
   cursor: pointer;
   padding: 0;
@@ -499,7 +512,8 @@ h1 {
   min-height: 100vh;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.9);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
 }
 
 .auth-form {
@@ -617,10 +631,11 @@ h1 {
 .edit-input {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid #007AFF;
+  border: 1px solid #007aff;
   border-radius: 6px;
   font-size: 0.95rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   background: white;
   color: #1d1d1f;
   box-sizing: border-box;
@@ -633,7 +648,7 @@ h1 {
 
 .edit-input:focus {
   outline: none;
-  border-color: #007AFF;
+  border-color: #007aff;
   box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
 }
 
@@ -673,13 +688,14 @@ h1 {
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .button-row .save-button {
-  background-color: #34C759;
+  background-color: #34c759;
   color: white;
 }
 
@@ -690,7 +706,7 @@ h1 {
 }
 
 .button-row .cancel-button {
-  background-color: #FF3B30;
+  background-color: #ff3b30;
   color: white;
 }
 
@@ -710,7 +726,8 @@ h1 {
   font-size: 0.95rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   min-width: 110px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -733,7 +750,7 @@ h1 {
 }
 
 .create-pokemon-button {
-  background-color: #007AFF;
+  background-color: #007aff;
   color: white;
   border: none;
   border-radius: 8px;
@@ -742,7 +759,8 @@ h1 {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: inline-flex;
   align-items: center;
@@ -761,4 +779,55 @@ h1 {
   background-color: #0056b3;
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  width: 40px;
+  height: 40px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: #2f2e2e;
+  border: 1px solid #2a2727;
+}
+
+.pagination button:hover:not(.active):not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pagination button.active {
+  font-weight: 900;
+  border-color: #101010;
+  background: rgb(170, 170, 234);
+  color: #101010;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  color: #bbb;
+  border-color: #ddd;
+  background-color: #f9f9f9;
+}
+
+.pagination .dots {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 20px;
+  user-select: none;
 }

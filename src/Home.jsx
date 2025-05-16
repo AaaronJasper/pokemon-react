@@ -4,12 +4,17 @@ import Pokemon from "./Pokemon";
 import logo from "./assets/International_Pokémon_logo.svg.png";
 import useAllPokemons from "./hooks/useAllPokemons";
 import { UserContext } from "./UserContext";
+import Pagination from "./Pagination";
 
 export default function App() {
   const { pokemons, pokemonImages } = useAllPokemons();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useContext(UserContext);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
   const navigate = useNavigate();
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = currentPage * itemsPerPage;
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -73,15 +78,17 @@ export default function App() {
       pokemon.level.toString().includes(searchQuery)
   );
 
-  const pokemonElements = filteredPokemons.map((pokemon) => {
-    return (
-      <Pokemon
-        key={pokemon.id}
-        pokemon={pokemon}
-        image={pokemonImages[pokemon.race]}
-      />
-    );
-  });
+  const pokemonElements = filteredPokemons
+    .slice(startIndex, endIndex)
+    .map((pokemon) => {
+      return (
+        <Pokemon
+          key={pokemon.id}
+          pokemon={pokemon}
+          image={pokemonImages[pokemon.race]}
+        />
+      );
+    });
 
   return (
     <div className="container">
@@ -152,6 +159,12 @@ export default function App() {
       ) : (
         <div className="pokemon-grid">{pokemonElements}</div>
       )}
+      <Pagination
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        itemsPerPage={itemsPerPage}
+        totalPokemons={filteredPokemons.length}
+      />
     </div>
   );
 }

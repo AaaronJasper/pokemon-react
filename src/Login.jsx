@@ -7,12 +7,14 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     if (!email || !password) {
       setError("All fields are required");
@@ -42,7 +44,8 @@ export default function Login() {
       })
       .then((data) => {
         if (data.code !== 200) {
-          throw new Error("Login failed. Please try again.");
+          setLoading(false);
+          setError("Login failed. Please try again.");
         }
 
         const userData = {
@@ -55,12 +58,14 @@ export default function Login() {
         sessionStorage.setItem("user", JSON.stringify(userData));
 
         setUser(userData);
+        setLoading(false);
 
         navigate("/");
       })
       .catch((error) => {
         console.error("Login error:", error);
         setError("Login failed. Please try again.");
+        setLoading(false);
       });
   };
 
