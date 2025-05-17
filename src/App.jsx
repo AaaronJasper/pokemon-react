@@ -7,6 +7,8 @@ import Register from "./Register.jsx";
 import PokemonDetail from "./PokemonDetail";
 import CreatePokemon from "./CreatePokemon";
 import { UserContext } from "./UserContext.jsx";
+import ResetPassword from "./ResetPassword.jsx";
+import SendResetPasswordEmail from "./SendResetPasswordEmail.jsx";
 
 export default function App() {
   const [user, setUser] = useAuthUser();
@@ -21,6 +23,11 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/pokemon/:id" element={<PokemonDetail />} />
             <Route path="/create_pokemon" element={<CreatePokemon />} />
+            <Route path="/reset_password/:token" element={<ResetPassword />} />
+            <Route
+              path="/send_reset_password_email"
+              element={<SendResetPasswordEmail />}
+            />
           </Routes>
         </UserContext.Provider>
       </BrowserRouter>

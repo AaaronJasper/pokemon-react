@@ -1,72 +1,62 @@
 import { useState, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import logo from "./assets/International_Pokémon_logo.svg.png";
-import { UserContext } from "./UserContext";
 
-export default function Login() {
+export default function ResetPassword() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useContext(UserContext);
+  const [isResetSuccess, setIsResetSuccess] = useState(false);
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    setIsResetSuccess(false);
 
-    if (!email || !password) {
+    // Validate form
+    if (!email || !password || !passwordConfirmation) {
       setError("All fields are required");
+      setLoading(false);
       return;
     }
 
-    fetch("http://127.0.0.1:8000/api/user/login", {
+    if (password !== passwordConfirmation) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
+    fetch(`http://127.0.0.1:8000/api/reset_password/${token}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+        token,
+      }),
     })
       .then((response) => {
-        if (response.status === 422) {
-          return response.json().then((data) => {
-            if (data.errors) {
-              const errorMessages = Object.values(data.errors)
-                .flat()
-                .join(", ");
-              throw new Error("Validation failed");
-            }
-            throw new Error(data.message || "Validation failed");
-          });
-        }
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.code !== 200) {
           setLoading(false);
-          setError("Login failed. Please try again.");
+          setError("Reset failed. Please try again.");
           return;
         }
-
-        const userData = {
-          id: data.data.id,
-          name: data.data.user,
-          token: data.data.token,
-        };
-
-        sessionStorage.setItem("token", userData.token);
-        sessionStorage.setItem("user", JSON.stringify(userData));
-
-        setUser(userData);
+        setIsResetSuccess(true);
         setLoading(false);
-
-        navigate("/");
       })
       .catch((error) => {
-        console.error("Login error:", error);
-        setError("Login failed. Please try again.");
+        setError("Reset failed. Please try again.");
         setLoading(false);
       });
   };
@@ -77,7 +67,12 @@ export default function Login() {
         <Link to="/">
           <img src={logo} alt="Pokemon Logo" className="auth-logo" />
         </Link>
-        <h2>Login</h2>
+        <h2>Reset Password</h2>
+        {isResetSuccess && (
+          <div className="success-message">
+            Password reset successful! Please log in to continue.
+          </div>
+        )}
         {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -100,21 +95,29 @@ export default function Login() {
               placeholder="Enter your password"
             />
           </div>
-          <button type="submit" className="auth-button login-button">
-            Login
+          <div className="form-group">
+            <label htmlFor="passwordConfirmation">Confirm Password</label>
+            <input
+              type="password"
+              id="passwordConfirmation"
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
+              placeholder="Confirm your password"
+            />
+          </div>
+          <button
+            type="submit"
+            className="auth-button login-button"
+            disabled={loading}
+          >
+            {loading ? "Reseting..." : "reset"}
           </button>
         </form>
         <div className="auth-links">
           <p>
-            Don't have an account?{" "}
-            <Link to="/register" className="auth-link">
-              Register here
-            </Link>
-          </p>
-          <p>
-            Forget password?{" "}
-            <Link to="/send_reset_password_email" className="auth-link">
-              Reset password
+            Already reset?{" "}
+            <Link to="/Login" className="auth-link">
+              Back to Login
             </Link>
           </p>
           <Link to="/" className="back-button">
