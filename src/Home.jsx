@@ -5,6 +5,7 @@ import logo from "./assets/International_Pokémon_logo.svg.png";
 import useAllPokemons from "./hooks/useAllPokemons";
 import { UserContext } from "./UserContext";
 import Pagination from "./Pagination";
+import SendVerifyEmail from "./SendVerifyEmail";
 
 export default function App() {
   const { pokemons, pokemonImages } = useAllPokemons();
@@ -15,6 +16,7 @@ export default function App() {
   const navigate = useNavigate();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = currentPage * itemsPerPage;
+  console.log(currentUser);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -29,8 +31,8 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    // Get the token from session storage
-    const token = sessionStorage.getItem("token");
+    // Get the token from local storage
+    const token = localStorage.getItem("token");
 
     // Call the logout API endpoint
     fetch("http://127.0.0.1:8000/api/user/logout", {
@@ -47,22 +49,20 @@ export default function App() {
         return response.json();
       })
       .then((data) => {
-        console.log("Logout successful:", data);
-        // Clear all user data from session storage
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
+        // Clear all user data from local storage
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId"); // Remove user ID specifically if it exists
         // Update state
         setCurrentUser(null);
         // Redirect to home page
         navigate("/");
       })
       .catch((error) => {
-        console.error("Error during logout:", error);
-        // Even if the API call fails, we still want to clear the local session
-        sessionStorage.removeItem("user");
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userId"); // Remove user ID specifically if it exists
+        // Even if the API call fails, we still want to clear the local local
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId"); // Remove user ID specifically if it exists
         setCurrentUser(null);
         navigate("/");
       });
@@ -95,15 +95,18 @@ export default function App() {
       <header className="header">
         <div className="auth-buttons">
           {currentUser ? (
-            <div className="user-info">
-              <span className="user-name">Welcome, {currentUser.name}</span>
-              <button
-                className="auth-button logout-button"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
-            </div>
+            <>
+              <div className="user-info">
+                <span className="user-name">Welcome, {currentUser.name}</span>
+                <button
+                  className="auth-button logout-button"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+                {!currentUser.isVerify && <SendVerifyEmail />}
+              </div>
+            </>
           ) : (
             <>
               <Link to="/login">

@@ -9,6 +9,7 @@ import CreatePokemon from "./CreatePokemon";
 import { UserContext } from "./UserContext.jsx";
 import ResetPassword from "./ResetPassword.jsx";
 import SendResetPasswordEmail from "./SendResetPasswordEmail.jsx";
+import VerifyEmail from "./VerifyEmail.jsx";
 
 export default function App() {
   const [user, setUser] = useAuthUser();
@@ -28,6 +29,10 @@ export default function App() {
               path="/send_reset_password_email"
               element={<SendResetPasswordEmail />}
             />
+            <Route
+              path="/verify_email/:token"
+              element={<VerifyEmail />}
+            ></Route>
           </Routes>
         </UserContext.Provider>
       </BrowserRouter>

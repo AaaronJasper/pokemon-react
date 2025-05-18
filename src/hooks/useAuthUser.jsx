@@ -4,8 +4,8 @@ export default function useAuthUser() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Get current user from session storage
-    const userData = sessionStorage.getItem("user");
+    // Get current user from local storage
+    const userData = localStorage.getItem("user");
     if (userData) {
       try {
         const parsedUser = JSON.parse(userData);

@@ -69,12 +69,15 @@ export default function Register() {
           name: data.data.user,
           token: data.data.token,
         };
-        // Store token and user data in session storage
-        sessionStorage.setItem("token", userData.token);
-        sessionStorage.setItem("user", JSON.stringify(userData));
+        // Store token and user data in local storage
+        localStorage.setItem("token", userData.token);
+        localStorage.setItem("user", JSON.stringify(userData));
 
         setUser(userData);
         setLoading(false);
+        alert(
+          "Registration successful! Please check your email and click the verification link."
+        );
         // Redirect to home page
         navigate("/");
       })

@@ -54,7 +54,7 @@ export default function usePokemonDetail(id) {
       setLoading(true);
       setError(null);
 
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
         method: "PUT",
         headers: {
@@ -95,7 +95,7 @@ export default function usePokemonDetail(id) {
       setLoading(true);
       setError(null);
 
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `http://127.0.0.1:8000/api/pokemon/${id}/skill`,
         {
@@ -133,7 +133,7 @@ export default function usePokemonDetail(id) {
       setLoading(true);
       setError(null);
 
-      const token = sessionStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
         method: "DELETE",
         headers: {

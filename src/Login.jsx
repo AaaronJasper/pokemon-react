@@ -43,7 +43,6 @@ export default function Login() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.code !== 200) {
           setLoading(false);
           setError("Login failed. Please try again.");
@@ -54,10 +53,11 @@ export default function Login() {
           id: data.data.id,
           name: data.data.user,
           token: data.data.token,
+          isVerify: data.data.isVerify,
         };
 
-        sessionStorage.setItem("token", userData.token);
-        sessionStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("token", userData.token);
+        localStorage.setItem("user", JSON.stringify(userData));
 
         setUser(userData);
         setLoading(false);
@@ -65,7 +65,7 @@ export default function Login() {
         navigate("/");
       })
       .catch((error) => {
-        console.error("Login error:", error);
+        console.log(error);
         setError("Login failed. Please try again.");
         setLoading(false);
       });
