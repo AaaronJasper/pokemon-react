@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import logo from "./assets/International_Pokémon_logo.svg.png";
-import { UserContext } from "./UserContext";
+import logo from "../../assets/International_Pokémon_logo.svg.png";
+import { UserContext } from "../../context/UserContext";
 
 export default function Register() {
   const [name, setName] = useState("");

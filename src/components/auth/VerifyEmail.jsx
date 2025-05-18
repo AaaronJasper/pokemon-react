@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../../context/UserContext";
 
 export default function VerifyEmail() {
   const { token } = useParams();

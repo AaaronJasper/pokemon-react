@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { UserContext } from "./UserContext";
-import useAvailableSkills from "./hooks/useAvailableSkills";
-import usePokemonDetail from "./hooks/usePokemonDetail";
+import { UserContext } from "../../context/UserContext";
+import useAvailableSkills from "../../hooks/useAvailableSkills";
+import usePokemonDetail from "../../hooks/usePokemonDetail";
 
 export default function PokemonDetail() {
   const { id } = useParams();

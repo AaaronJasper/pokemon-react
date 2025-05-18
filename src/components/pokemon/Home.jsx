@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Pokemon from "./Pokemon";
-import logo from "./assets/International_Pokémon_logo.svg.png";
-import useAllPokemons from "./hooks/useAllPokemons";
-import { UserContext } from "./UserContext";
-import Pagination from "./Pagination";
-import SendVerifyEmail from "./SendVerifyEmail";
+import logo from "../../assets/International_Pokémon_logo.svg.png";
+import useAllPokemons from "../../hooks/useAllPokemons";
+import { UserContext } from "../../context/UserContext";
+import Pagination from "../common/Pagination";
+import SendVerifyEmail from "../auth/SendVerifyEmail";
 
 export default function App() {
   const { pokemons, pokemonImages } = useAllPokemons();
