@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 
@@ -7,9 +7,13 @@ export default function OAuthCallback() {
   const navigate = useNavigate();
   const { code } = useParams();
   const hasFetched = useRef(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setError(null);
+
     if (!code || hasFetched.current) {
+      setError("The authorization code is invalid or has already been used.");
       return;
     }
 
@@ -18,7 +22,7 @@ export default function OAuthCallback() {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/user/get_user_data",
+          "http://127.0.0.1:8000/api/oauth/exchange-token",
           {
             method: "POST",
             headers: {
@@ -27,10 +31,6 @@ export default function OAuthCallback() {
             body: JSON.stringify({ code }),
           }
         );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-        }
 
         const data = await response.json();
         console.log(data);
@@ -47,12 +47,23 @@ export default function OAuthCallback() {
         setCurrentUser(userData);
         navigate("/");
       } catch (err) {
-        console.error("無法取得使用者資訊:", err.message);
-        navigate("/login");
+        setError("Login failed. Please try again.");
       }
     };
-    fetchUserData();
-  }, []);
 
-  return <p>Redirecting...</p>;
+    fetchUserData();
+  }, [code]);
+
+  if (error) {
+    return (
+      <div>
+        <h2 className="error-message">{error}</h2>
+        <button className="back-home-button" onClick={() => navigate("/login")}>
+          Back to login
+        </button>
+      </div>
+    );
+  }
+
+  return <p>Redricting...</p>;
 }
