@@ -965,3 +965,38 @@ h1 {
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.google-signin-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.google-signin-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: white;
+  color: #757575;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 220px;
+}
+
+.google-signin-button:hover {
+  background-color: #f8f8f8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.google-logo {
+  width: 10px;
+  height: 10px;
+  object-fit: contain;
+}

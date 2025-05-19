@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../assets/International_Pokémon_logo.svg.png";
+import googleLogo from "../../assets/Google_Favicon_2025.svg.png";
 import { UserContext } from "../../context/UserContext";
 
 export default function Register() {
@@ -150,11 +151,20 @@ export default function Register() {
           </button>
         </form>
         <div className="auth-links">
+          <div className="google-signin-container">
+            <a
+              href="http://127.0.0.1:8000/api/auth/google"
+              className="google-signin-button"
+            >
+              <img src={googleLogo} alt="Google Logo" className="google-logo" />
+              Sign in with Google
+            </a>
+          </div>
           <p>
             Already have an account?{" "}
-            <a href="/login" className="auth-link">
+            <Link to="/login" className="auth-link">
               Login here
-            </a>
+            </Link>
           </p>
           <a href="/" className="back-button" onClick={handleBackToHome}>
             Back to Home

@@ -10,6 +10,7 @@ import { UserContext } from "../context/UserContext.jsx";
 import ResetPassword from "./auth/ResetPassword.jsx";
 import SendResetPasswordEmail from "./auth/SendResetPasswordEmail.jsx";
 import VerifyEmail from "./auth/VerifyEmail.jsx";
+import OAuthCallback from "./auth/OAuthCallback.jsx";
 
 export default function App() {
   const [user, setUser] = useAuthUser();
@@ -27,7 +28,8 @@ export default function App() {
           path="/send_reset_password_email"
           element={<SendResetPasswordEmail />}
         />
-        <Route path="/verify_email/:token" element={<VerifyEmail />}></Route>
+        <Route path="/verify_email/:token" element={<VerifyEmail />} />
+        <Route path="/OAuthCallback/:code" element={<OAuthCallback />} />
       </Routes>
     </UserContext.Provider>
   );
