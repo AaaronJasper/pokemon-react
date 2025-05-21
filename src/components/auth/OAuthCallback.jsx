@@ -22,7 +22,7 @@ export default function OAuthCallback() {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/oauth/exchange-token",
+          "http://127.0.0.1:8000/api/oauth/exchange-tokenn",
           {
             method: "POST",
             headers: {
@@ -54,16 +54,26 @@ export default function OAuthCallback() {
     fetchUserData();
   }, [code]);
 
-  if (error) {
-    return (
-      <div>
-        <h2 className="error-message">{error}</h2>
-        <button className="back-home-button" onClick={() => navigate("/login")}>
-          Back to login
-        </button>
+  return (
+    <div className="verify-email-container">
+      <div className="verify-email-card">
+        {error ? (
+          <>
+            <h2 className="error-message">{error}</h2>
+            <button
+              className="back-home-button"
+              onClick={() => navigate("/login")}
+            >
+              Back to login
+            </button>
+          </>
+        ) : (
+          <div className="loading-message">
+            <h2>Redirecting...</h2>
+            <div className="loading-spinner"></div>
+          </div>
+        )}
       </div>
-    );
-  }
-
-  return <p>Redricting...</p>;
+    </div>
+  );
 }

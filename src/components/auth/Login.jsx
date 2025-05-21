@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../assets/International_Pokémon_logo.svg.png";
+import googleLogo from "../../assets/Google_Favicon_2025.svg.png";
 import { UserContext } from "../../context/UserContext";
 
 export default function Login() {
@@ -105,6 +106,15 @@ export default function Login() {
           </button>
         </form>
         <div className="auth-links">
+          <div className="google-signin-container">
+            <a
+              href="http://127.0.0.1:8000/api/auth/google"
+              className="google-signin-button"
+            >
+              <img src={googleLogo} alt="Google Logo" className="google-logo" />
+              Login in with Google
+            </a>
+          </div>
           <p>
             Don't have an account?{" "}
             <Link to="/register" className="auth-link">
