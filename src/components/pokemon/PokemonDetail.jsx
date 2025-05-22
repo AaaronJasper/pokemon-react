@@ -104,8 +104,13 @@ export default function PokemonDetail() {
 
   if (loading) {
     return (
-      <div className="pokemon-detail">
-        <div className="loading">Loading...</div>
+      <div className="verify-email-container">
+        <div className="verify-email-card">
+          <div className="loading-message">
+            <h2>Updating...</h2>
+            <div className="loading-spinner"></div>
+          </div>
+        </div>
       </div>
     );
   }

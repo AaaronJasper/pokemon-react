@@ -81,9 +81,7 @@ export default function usePokemonDetail(id) {
 
       return data.data;
     } catch (error) {
-      console.error("Error updating Pokémon:", error);
-      setError(error.message);
-      throw error;
+      setError("Failed to update Pokémon");
     } finally {
       setLoading(false);
     }
