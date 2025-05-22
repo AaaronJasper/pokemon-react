@@ -1000,3 +1000,28 @@ h1 {
   height: 10px;
   object-fit: contain;
 }
+
+.create-buttons-container {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.create-button {
+  margin: 0 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  background-color: #a678d1;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Poppins", "Segoe UI", "Arial", sans-serif;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.create-button:hover {
+  background-color: #6a2ea0;
+  transform: translateY(-2px);
+}

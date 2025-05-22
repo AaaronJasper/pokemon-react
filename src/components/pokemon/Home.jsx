@@ -6,6 +6,7 @@ import useAllPokemons from "../../hooks/useAllPokemons";
 import { UserContext } from "../../context/UserContext";
 import Pagination from "../common/Pagination";
 import SendVerifyEmail from "../auth/SendVerifyEmail";
+import { Plus } from "lucide-react";
 
 export default function App() {
   const { pokemons, pokemonImages } = useAllPokemons();
@@ -95,18 +96,16 @@ export default function App() {
       <header className="header">
         <div className="auth-buttons">
           {currentUser ? (
-            <>
-              <div className="user-info">
-                <span className="user-name">Welcome, {currentUser.name}</span>
-                <button
-                  className="auth-button logout-button"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-                {!currentUser.isVerify && <SendVerifyEmail />}
-              </div>
-            </>
+            <div className="user-info">
+              <span className="user-name">Welcome, {currentUser.name}</span>
+              <button
+                className="auth-button logout-button"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+              {!currentUser.isVerify && <SendVerifyEmail />}
+            </div>
           ) : (
             <>
               <Link to="/login">
@@ -120,8 +119,11 @@ export default function App() {
             </>
           )}
         </div>
+
         <img src={logo} alt="Pokemon Logo" className="logo" />
         <h1>Pokémon Collection</h1>
+
+        {/* 搜尋欄 */}
         <div className="search-container">
           <input
             type="text"
@@ -133,12 +135,17 @@ export default function App() {
         </div>
       </header>
 
+      {/* 🔽 現在將 create buttons 放在搜尋欄下方 */}
       {currentUser && (
-        <div className="create-pokemon-button-container">
-          <Link to="/create_pokemon">
-            <button className="create-pokemon-button">
-              Create New Pokémon
-            </button>
+        <div className="create-buttons-container">
+          <Link to="/create_pokemon" className="create-button">
+            Create New Pokémon {"\u002B"}
+          </Link>
+          <Link to="/create_pokemon_trait/nature" className="create-button">
+            Create New Nature {"\u002B"}
+          </Link>
+          <Link to="/create_pokemon_trait/ability" className="create-button">
+            Create New Ability {"\u002B"}
           </Link>
         </div>
       )}
