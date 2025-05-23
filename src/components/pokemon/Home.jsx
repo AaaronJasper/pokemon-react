@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Pokemon from "./Pokemon";
-import logo from "../../assets/International_Pokémon_logo.svg.png";
+import logo from "../../../public/International_Pokemon_logo.svg.png";
 import useAllPokemons from "../../hooks/useAllPokemons";
 import { UserContext } from "../../context/UserContext";
 import Pagination from "../common/Pagination";
@@ -123,7 +123,6 @@ export default function App() {
         <img src={logo} alt="Pokemon Logo" className="logo" />
         <h1>Pokémon Collection</h1>
 
-        {/* 搜尋欄 */}
         <div className="search-container">
           <input
             type="text"
@@ -135,7 +134,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* 🔽 現在將 create buttons 放在搜尋欄下方 */}
       {currentUser && (
         <div className="create-buttons-container">
           <Link to="/create_pokemon" className="create-button">

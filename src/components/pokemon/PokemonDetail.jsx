@@ -107,7 +107,7 @@ export default function PokemonDetail() {
       <div className="verify-email-container">
         <div className="verify-email-card">
           <div className="loading-message">
-            <h2>Updating...</h2>
+            <h2>Loading...</h2>
             <div className="loading-spinner"></div>
           </div>
         </div>

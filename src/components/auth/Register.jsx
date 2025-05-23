@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import logo from "../../assets/International_Pokémon_logo.svg.png";
-import googleLogo from "../../assets/Google_Favicon_2025.svg.png";
+import logo from "../../../public/International_Pokemon_logo.svg.png";
+import googleLogo from "../../../public/Google_Favicon_2025.svg.png";
 import { UserContext } from "../../context/UserContext";
 
 export default function Register() {

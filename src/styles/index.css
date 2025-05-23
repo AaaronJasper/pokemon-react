@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: url("/src/assets/Poke_card.jpg");
+  background-image: url("/public/Poke_card.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

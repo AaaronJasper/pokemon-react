@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../../assets/International_Pokémon_logo.svg.png";
+import logo from "../../../public/International_Pokemon_logo.svg.png";
 
 export default function SendResetPasswordEmail() {
   const [email, setEmail] = useState("");
