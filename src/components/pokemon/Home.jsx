@@ -6,10 +6,9 @@ import useAllPokemons from "../../hooks/useAllPokemons";
 import { UserContext } from "../../context/UserContext";
 import Pagination from "../common/Pagination";
 import SendVerifyEmail from "../auth/SendVerifyEmail";
-import { Plus } from "lucide-react";
 
 export default function App() {
-  const { pokemons, pokemonImages } = useAllPokemons();
+  const { pokemons } = useAllPokemons();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,14 +20,6 @@ export default function App() {
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
-  };
-
-  const handleLogin = () => {
-    navigate("/login");
-  };
-
-  const handleRegister = () => {
-    navigate("/register");
   };
 
   const handleLogout = () => {
@@ -82,13 +73,7 @@ export default function App() {
   const pokemonElements = filteredPokemons
     .slice(startIndex, endIndex)
     .map((pokemon) => {
-      return (
-        <Pokemon
-          key={pokemon.id}
-          pokemon={pokemon}
-          image={pokemonImages[pokemon.race]}
-        />
-      );
+      return <Pokemon key={pokemon.id} pokemon={pokemon} />;
     });
 
   return (

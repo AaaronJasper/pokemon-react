@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Pokemon({ pokemon, image }) {
+export default function Pokemon({ pokemon }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -9,7 +9,7 @@ export default function Pokemon({ pokemon, image }) {
 
   return (
     <div className="pokemon-card" onClick={handleClick}>
-      <img src={image} alt={pokemon.name} />
+      <img src={pokemon.image_url} alt={pokemon.name} />
       <h2>{pokemon.name}</h2>
       <h3>{pokemon.race}</h3>
       <p>Level: {pokemon.level}</p>
