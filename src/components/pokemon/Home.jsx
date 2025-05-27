@@ -6,9 +6,15 @@ import useAllPokemons from "../../hooks/useAllPokemons";
 import { UserContext } from "../../context/UserContext";
 import Pagination from "../common/Pagination";
 import SendVerifyEmail from "../auth/SendVerifyEmail";
+import useSortedData from "../../hooks/useSortedData";
 
 export default function App() {
   const { pokemons } = useAllPokemons();
+  const { sortedPokemons, sortKey, sortOrder, handleSort } = useSortedData(
+    pokemons,
+    "id",
+    "desc"
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +22,6 @@ export default function App() {
   const navigate = useNavigate();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = currentPage * itemsPerPage;
-  console.log(currentUser);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -60,7 +65,7 @@ export default function App() {
       });
   };
 
-  const filteredPokemons = pokemons.filter(
+  const filteredPokemons = (sortedPokemons || []).filter(
     (pokemon) =>
       pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pokemon.race.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -116,6 +121,21 @@ export default function App() {
             onChange={handleSearch}
             className="search-input"
           />
+          <div className="sort-buttons">
+            <button
+              className={`sort-button ${sortKey === "id" ? "active" : ""}`}
+              onClick={() => handleSort("id")}
+            >
+              Sort {sortKey === "id" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+            </button>
+            <button
+              className={`sort-button ${sortKey === "level" ? "active" : ""}`}
+              onClick={() => handleSort("level")}
+            >
+              Level{" "}
+              {sortKey === "level" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+            </button>
+          </div>
         </div>
       </header>
 
