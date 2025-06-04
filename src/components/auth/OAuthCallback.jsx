@@ -12,17 +12,17 @@ export default function OAuthCallback() {
   useEffect(() => {
     setError(null);
 
-    if (!code || hasFetched.current) {
-      setError("The authorization code is invalid or has already been used.");
-      return;
-    }
+    // if (!code || hasFetched.current) {
+    //   setError("The authorization code is invalid or has already been used.");
+    //   return;
+    // }
 
     hasFetched.current = true;
 
     const fetchUserData = async () => {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/api/oauth/exchange-tokenn",
+          "http://127.0.0.1:8000/api/oauth/exchange-token",
           {
             method: "POST",
             headers: {

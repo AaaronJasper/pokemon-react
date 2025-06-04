@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Pokemon from "./Pokemon";
 import logo from "../../../public/International_Pokemon_logo.svg.png";
@@ -22,6 +22,7 @@ export default function App() {
   const navigate = useNavigate();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = currentPage * itemsPerPage;
+  const searchRef = useRef();
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -81,6 +82,10 @@ export default function App() {
       return <Pokemon key={pokemon.id} pokemon={pokemon} />;
     });
 
+  useEffect(() => {
+    searchRef.current.focus();
+  }, []);
+
   return (
     <div className="container">
       <header className="header">
@@ -120,6 +125,7 @@ export default function App() {
             value={searchQuery}
             onChange={handleSearch}
             className="search-input"
+            ref={searchRef}
           />
           <div className="sort-buttons">
             <button
