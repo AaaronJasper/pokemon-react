@@ -154,7 +154,16 @@ export default function PokemonDetail() {
   return (
     <div className="pokemon-detail">
       <div className="pokemon-detail-card">
-        <h2>{pokemon.name}</h2>
+        {isEditing ? (
+          <input
+            type="text"
+            value={editedPokemon?.name || ""}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            className="h2-like-input"
+          />
+        ) : (
+          <h2>{pokemon.name}</h2>
+        )}
         {pokemonImage && <img src={pokemonImage} alt={pokemon.name} />}
         <div className="pokemon-info">
           <div className="info-section">

@@ -1060,3 +1060,13 @@ h1 {
   background-color: #6a2ea0;
   transform: translateY(-2px);
 }
+
+.h2-like-input {
+  font-size: 1.5em;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  background: transparent;
+  width: auto;
+  max-width: 200px;
+}
