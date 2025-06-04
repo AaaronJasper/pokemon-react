@@ -10,6 +10,7 @@ import useSortedData from "../../hooks/useSortedData";
 
 export default function App() {
   const { pokemons } = useAllPokemons();
+  const [ownPokemons, setOwnPokemons] = useState(false);
   const { sortedPokemons, sortKey, sortOrder, handleSort } = useSortedData(
     pokemons,
     "id",
@@ -53,6 +54,7 @@ export default function App() {
         localStorage.removeItem("userId"); // Remove user ID specifically if it exists
         // Update state
         setCurrentUser(null);
+        setOwnPokemons(false);
         // Redirect to home page
         navigate("/");
       })
@@ -62,19 +64,28 @@ export default function App() {
         localStorage.removeItem("token");
         localStorage.removeItem("userId"); // Remove user ID specifically if it exists
         setCurrentUser(null);
+        setOwnPokemons(false);
         navigate("/");
       });
   };
 
-  const filteredPokemons = (sortedPokemons || []).filter(
-    (pokemon) =>
+  const filteredPokemons = (sortedPokemons || []).filter((pokemon) => {
+    const matchesSearch =
       pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pokemon.race.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pokemon.nature.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pokemon.ability.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pokemon.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      pokemon.level.toString().includes(searchQuery)
-  );
+      pokemon.level.toString().includes(searchQuery);
+
+    //if only want user's pokemon, then check pokemon's user and user.name
+    //if user want to show all pokemons and !ownPokemons will be true, so all pokemon can be shown
+    const isOwnedByUser =
+      !ownPokemons ||
+      (currentUser !== null && pokemon.user === currentUser.name);
+
+    return matchesSearch && isOwnedByUser;
+  });
 
   const pokemonElements = filteredPokemons
     .slice(startIndex, endIndex)
@@ -140,6 +151,13 @@ export default function App() {
             >
               Level{" "}
               {sortKey === "level" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
+            </button>
+            <button
+              className={`own-button ${ownPokemons ? "active" : ""}`}
+              onClick={() => setOwnPokemons((prev) => !prev)}
+              disabled={!currentUser}
+            >
+              Own
             </button>
           </div>
         </div>
