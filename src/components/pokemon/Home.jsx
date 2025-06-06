@@ -154,7 +154,10 @@ export default function App() {
             </button>
             <button
               className={`own-button ${ownPokemons ? "active" : ""}`}
-              onClick={() => setOwnPokemons((prev) => !prev)}
+              onClick={() => {
+                setOwnPokemons((prev) => !prev);
+                setCurrentPage(1);
+              }}
               disabled={!currentUser}
             >
               Own
