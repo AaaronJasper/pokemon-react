@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../../public/International_Pokemon_logo.svg.png";
 import googleLogo from "../../../public/Google_Favicon_2025.svg.png";
@@ -13,6 +13,11 @@ export default function Register() {
   const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
   const [loading, setLoading] = useState(false);
+  const registerRef = useRef();
+
+  useEffect(() => {
+    registerRef.current?.focus();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -110,6 +115,7 @@ export default function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
+              ref={registerRef}
             />
           </div>
           <div className="form-group">

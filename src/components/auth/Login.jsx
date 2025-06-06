@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import logo from "../../../public/International_Pokemon_logo.svg.png";
 import googleLogo from "../../../public/Google_Favicon_2025.svg.png";
@@ -10,7 +10,12 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useContext(UserContext);
+  const loginRef = useRef();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    loginRef.current?.focus();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -89,6 +94,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
+              ref={loginRef}
             />
           </div>
           <div className="form-group">
