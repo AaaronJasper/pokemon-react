@@ -12,6 +12,9 @@ import SendResetPasswordEmail from "./auth/SendResetPasswordEmail.jsx";
 import VerifyEmail from "./auth/VerifyEmail.jsx";
 import OAuthCallback from "./auth/OAuthCallback.jsx";
 import CreatePokemonTrait from "./pokemon/CreatePokemonTrait.jsx";
+import TradePokemon from "./trade/TradePokemon.jsx";
+import OwnPokemons from "./trade/OwnPokemons.jsx";
+import ReceivePokemons from "./trade/ReceivePokemons.jsx";
 
 export default function App() {
   const [user, setUser] = useAuthUser();
@@ -35,6 +38,9 @@ export default function App() {
           path="/create_pokemon_trait/:trait"
           element={<CreatePokemonTrait />}
         />
+        <Route path="/trade" element={<TradePokemon />} />
+        <Route path="/choose_own_pokemon" element={<OwnPokemons />} />
+        <Route path="/choose_receive_pokemon" element={<ReceivePokemons />} />
       </Routes>
     </UserContext.Provider>
   );

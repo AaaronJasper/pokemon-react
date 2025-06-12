@@ -177,6 +177,9 @@ export default function App() {
           <Link to="/create_pokemon_trait/ability" className="create-button">
             Create New Ability {"\u002B"}
           </Link>
+          <Link to="/trade" className="create-trade-button">
+            Trade {"\u002B"}
+          </Link>
         </div>
       )}
 

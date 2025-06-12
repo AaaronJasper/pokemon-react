@@ -22,4 +22,4 @@ COPY . .
 EXPOSE 5173
 
 #CMD execute to start the container
-CMD npm run dev
+CMD npm run dev 
