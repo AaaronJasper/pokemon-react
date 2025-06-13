@@ -60,6 +60,13 @@ export default function TradePokemon() {
       }
 
       const result = await response.json();
+      console.log(result);
+
+      if (result.code !== 201) {
+        alert(result.message);
+        return;
+      }
+
       setTrade({
         id: result.data.id,
         sender_id: result.data.sender_id,
