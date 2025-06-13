@@ -1274,6 +1274,16 @@ h1 {
   background-color: #11ecd3;
 }
 
+.pending-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #444;
+  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
 .trade-button-group {
   display: flex;
   flex-direction: column;

@@ -151,7 +151,7 @@ export default function TradePokemon() {
       setTradePokemon(null);
       setPartnerPokemon(null);
       setLoading(false);
-      alert("Trade rejected!");
+      alert("Trade canceled!");
     } catch (err) {
       setLoading(false);
       alert(err.message);
@@ -272,7 +272,7 @@ export default function TradePokemon() {
             )}
             {tradePokemon && partnerPokemon ? (
               <button className="trade-button" onClick={handleTrade}>
-                <RefreshCcw size={40} />
+                <RefreshCcw size={30} />
               </button>
             ) : null}
             {partnerPokemon && partnerPokemon.image_url ? (
@@ -344,8 +344,14 @@ export default function TradePokemon() {
                 </button>
               </div>
             ) : (
-              <div className="pending-container">
-                <p className="pending-text">Waiting...</p>
+              <div className="trade-button-group">
+                <p className="pending-text">Waiting response...</p>
+                <button
+                  className="trade-button reject-button"
+                  onClick={rejectTrade}
+                >
+                  Cancel
+                </button>
               </div>
             )}
             {partnerPokemon && (
