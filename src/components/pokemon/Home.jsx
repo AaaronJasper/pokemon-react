@@ -180,6 +180,9 @@ export default function App() {
           <Link to="/trade" className="create-trade-button">
             Trade {"\u002B"}
           </Link>
+          <Link to="/trade_history" className="create-trade-button">
+            Trade History
+          </Link>
         </div>
       )}
 

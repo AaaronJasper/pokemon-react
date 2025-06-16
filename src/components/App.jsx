@@ -15,6 +15,7 @@ import CreatePokemonTrait from "./pokemon/CreatePokemonTrait.jsx";
 import TradePokemon from "./trade/TradePokemon.jsx";
 import OwnPokemons from "./trade/OwnPokemons.jsx";
 import ReceivePokemons from "./trade/ReceivePokemons.jsx";
+import TradeHistory from "./trade/TradeHistory.jsx";
 
 export default function App() {
   const [user, setUser] = useAuthUser();
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/trade" element={<TradePokemon />} />
         <Route path="/choose_own_pokemon" element={<OwnPokemons />} />
         <Route path="/choose_receive_pokemon" element={<ReceivePokemons />} />
+        <Route path="/trade_history" element={<TradeHistory />} />
       </Routes>
     </UserContext.Provider>
   );
