@@ -16,8 +16,6 @@ export default function TradeHistory() {
   const [sortOrder, setSortOrder] = useState("desc");
   const [filterRole, setFilterRole] = useState("all");
 
-  const navigate = useNavigate();
-
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
