@@ -154,6 +154,7 @@ export default function PokemonDetail() {
   return (
     <div className="pokemon-detail">
       <div className="pokemon-detail-card">
+        {pokemon.is_liked && <div className="pokemon-liked-icon">❤️</div>}
         {isEditing ? (
           <input
             type="text"

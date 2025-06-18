@@ -11,6 +11,7 @@ import useSortedData from "../../hooks/useSortedData";
 export default function App() {
   const { pokemons } = useAllPokemons();
   const [ownPokemons, setOwnPokemons] = useState(false);
+  const [likePokemons, setLikePokemons] = useState(false);
   const { sortedPokemons, sortKey, sortOrder, handleSort } = useSortedData(
     pokemons,
     "id",
@@ -84,13 +85,15 @@ export default function App() {
       !ownPokemons ||
       (currentUser !== null && pokemon.user === currentUser.name);
 
-    return matchesSearch && isOwnedByUser;
+    const isLikedFilterPassed = !likePokemons || pokemon.is_liked === true;
+
+    return matchesSearch && isOwnedByUser && isLikedFilterPassed;
   });
 
   const pokemonElements = filteredPokemons
     .slice(startIndex, endIndex)
     .map((pokemon) => {
-      return <Pokemon key={pokemon.id} pokemon={pokemon} />;
+      return <Pokemon key={pokemon.id} pokemon={pokemon} user={currentUser} />;
     });
 
   useEffect(() => {
@@ -161,6 +164,15 @@ export default function App() {
               disabled={!currentUser}
             >
               Own
+            </button>
+            <button
+              className={`own-button ${likePokemons ? "active" : ""}`}
+              onClick={() => {
+                setLikePokemons((prev) => !prev);
+                setCurrentPage(1);
+              }}
+            >
+              ❤️
             </button>
           </div>
         </div>

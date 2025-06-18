@@ -13,12 +13,20 @@ export default function usePokemonDetail(id) {
 
   // Function to fetch Pokémon details
   const fetchPokemonDetails = async () => {
+    const token = localStorage.getItem("token");
+
     try {
       setLoading(true);
       setError(null);
 
       // Fetch Pokémon details
-      const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/pokemon/${id}`, {
+        headers: token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {},
+      });
       const data = await response.json();
 
       if (data.code === 404) {
