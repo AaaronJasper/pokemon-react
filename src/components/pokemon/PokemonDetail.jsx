@@ -324,7 +324,10 @@ export default function PokemonDetail() {
                     Cancel
                   </button>
                 </div>
-                <button className="back-button" onClick={() => navigate("/")}>
+                <button
+                  className="pokemon-back-button"
+                  onClick={() => navigate(-1)}
+                >
                   Back
                 </button>
               </>
@@ -338,7 +341,10 @@ export default function PokemonDetail() {
                     Delete Pokémon
                   </button>
                 </div>
-                <button className="back-button" onClick={() => navigate(-1)}>
+                <button
+                  className="pokemon-back-button"
+                  onClick={() => navigate(-1)}
+                >
                   Back
                 </button>
               </>
@@ -347,7 +353,10 @@ export default function PokemonDetail() {
         )}
         {!isOwner && (
           <div className="action-buttons">
-            <button className="back-button" onClick={() => navigate(-1)}>
+            <button
+              className="pokemon-back-button"
+              onClick={() => navigate(-1)}
+            >
               Back
             </button>
           </div>

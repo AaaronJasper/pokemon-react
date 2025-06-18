@@ -247,10 +247,10 @@
 }
 
 .button-row .delete-button {
-  background-color: #ff4444 !important;
-  color: white !important;
+  background-color: transparent !important;
+  color: #f44336 !important;
   padding: 10px 20px;
-  border: none;
+  border: 2px solid #f44336;
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.95rem;
@@ -260,13 +260,62 @@
     Arial, sans-serif;
   min-width: 110px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: none;
 }
 
 .button-row .delete-button:hover {
-  background-color: #ff0000 !important;
+  background-color: #f44336 !important;
+  color: white !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-row .edit-button {
+  background-color: transparent !important;
+  color: #4caf50 !important;
+  padding: 10px 20px;
+  border: 2px solid #4caf50;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  min-width: 110px;
+  text-align: center;
+  box-shadow: none;
+}
+
+.button-row .edit-button:hover {
+  background-color: #4caf50 !important;
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pokemon-back-button {
+  background-color: transparent !important;
+  color: #2196f3 !important;
+  padding: 10px 20px;
+  border: 2px solid #0689f3;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  min-width: 110px;
+  text-align: center;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.3); /* 顯眼藍色邊 */
+}
+
+.pokemon-back-button:hover {
+  background-color: #2196f3 !important;
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 0 0 2px rgba(33, 150, 243, 0.3);
 }
 
 .create-pokemon-button-container {
