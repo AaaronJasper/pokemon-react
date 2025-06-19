@@ -3,11 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import useAvailableSkills from "../../hooks/useAvailableSkills";
 import usePokemonDetail from "../../hooks/usePokemonDetail";
+import PokemonDescription from "./PokemonDescription.jsx";
 
 export default function PokemonDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const [editedPokemon, setEditedPokemon] = useState(null);
   const [currentUser, setCurrentUser] = useContext(UserContext);
   const {
@@ -102,6 +104,10 @@ export default function PokemonDetail() {
     }
   };
 
+  const toggleDescription = () => {
+    setShowDescription((prev) => !prev);
+  };
+
   if (loading) {
     return (
       <div className="verify-email-container">
@@ -155,6 +161,16 @@ export default function PokemonDetail() {
     <div className="pokemon-detail">
       <div className="pokemon-detail-card">
         {pokemon.is_liked && <div className="pokemon-liked-icon">❤️</div>}
+        <div className="pokemon-description-icon">
+          <button
+            onClick={toggleDescription}
+            className={`description-toggle-button ${
+              showDescription ? "transparent" : "colored"
+            }`}
+          >
+            {showDescription ? "👁️‍🗨️ Hide Info" : "👁️ Show Info"}
+          </button>
+        </div>
         {isEditing ? (
           <input
             type="text"
@@ -166,149 +182,165 @@ export default function PokemonDetail() {
           <h2>{pokemon.name}</h2>
         )}
         {pokemonImage && <img src={pokemonImage} alt={pokemon.name} />}
-        <div className="pokemon-info">
-          <div className="info-section">
-            <div className="info-group">
-              <label>Race:</label>
-              <span>{pokemon.race}</span>
+        {showDescription ? (
+          <PokemonDescription key={pokemon.id} pokemon={pokemon} />
+        ) : (
+          <div className="pokemon-info">
+            <div className="info-section">
+              <div className="info-group">
+                <label>Race:</label>
+                <span>{pokemon.race}</span>
+              </div>
+              <div className="info-group">
+                <label>Level:</label>
+                {isEditing ? (
+                  <input
+                    type="number"
+                    value={editedPokemon?.level || ""}
+                    onChange={(e) =>
+                      handleInputChange("level", parseInt(e.target.value))
+                    }
+                    className="edit-input"
+                  />
+                ) : (
+                  <span>{pokemon.level}</span>
+                )}
+              </div>
+              <div className="info-group">
+                <label>Nature:</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={editedPokemon?.nature || ""}
+                    onChange={(e) =>
+                      handleInputChange("nature", e.target.value)
+                    }
+                    className="edit-input"
+                  />
+                ) : (
+                  <span>{pokemon.nature}</span>
+                )}
+              </div>
+              <div className="info-group">
+                <label>Ability:</label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={editedPokemon.ability}
+                    onChange={(e) =>
+                      handleInputChange("ability", e.target.value)
+                    }
+                    className="edit-input"
+                  />
+                ) : (
+                  <span>{pokemon.ability}</span>
+                )}
+              </div>
+              <div className="info-group">
+                <label>Owner:</label>
+                <span>{pokemon.user}</span>
+              </div>
             </div>
-            <div className="info-group">
-              <label>Level:</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={editedPokemon?.level || ""}
-                  onChange={(e) =>
-                    handleInputChange("level", parseInt(e.target.value))
-                  }
-                  className="edit-input"
-                />
-              ) : (
-                <span>{pokemon.level}</span>
-              )}
-            </div>
-            <div className="info-group">
-              <label>Nature:</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedPokemon?.nature || ""}
-                  onChange={(e) => handleInputChange("nature", e.target.value)}
-                  className="edit-input"
-                />
-              ) : (
-                <span>{pokemon.nature}</span>
-              )}
-            </div>
-            <div className="info-group">
-              <label>Ability:</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={editedPokemon.ability}
-                  onChange={(e) => handleInputChange("ability", e.target.value)}
-                  className="edit-input"
-                />
-              ) : (
-                <span>{pokemon.ability}</span>
-              )}
-            </div>
-            <div className="info-group">
-              <label>Owner:</label>
-              <span>{pokemon.user}</span>
+            <div className="info-section">
+              <div className="info-group">
+                <label>Skill 1:</label>
+                {isEditing ? (
+                  <select
+                    value={editedPokemon.skill1 || ""}
+                    onChange={(e) =>
+                      handleInputChange("skill1", e.target.value)
+                    }
+                    className="edit-input"
+                  >
+                    {(!editedPokemon.skill1 ||
+                      editedPokemon.skill1 === "Not Learned") && (
+                      <option value="">Not Learned</option>
+                    )}
+                    {availableSkills.map((skill, index) => (
+                      <option key={index} value={skill}>
+                        {skill}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span>{pokemon.skill1 ? pokemon.skill1 : "Not Learned"}</span>
+                )}
+              </div>
+              <div className="info-group">
+                <label>Skill 2:</label>
+                {isEditing ? (
+                  <select
+                    value={editedPokemon.skill2 || ""}
+                    onChange={(e) =>
+                      handleInputChange("skill2", e.target.value)
+                    }
+                    className="edit-input"
+                  >
+                    {(!editedPokemon.skill2 ||
+                      editedPokemon.skill2 === "Not Learned") && (
+                      <option value="">Not Learned</option>
+                    )}
+                    {availableSkills.map((skill, index) => (
+                      <option key={index} value={skill}>
+                        {skill}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span>{pokemon.skill2 ? pokemon.skill2 : "Not Learned"}</span>
+                )}
+              </div>
+              <div className="info-group">
+                <label>Skill 3:</label>
+                {isEditing ? (
+                  <select
+                    value={editedPokemon.skill3 || ""}
+                    onChange={(e) =>
+                      handleInputChange("skill3", e.target.value)
+                    }
+                    className="edit-input"
+                  >
+                    {(!editedPokemon.skill3 ||
+                      editedPokemon.skill3 === "Not Learned") && (
+                      <option value="">Not Learned</option>
+                    )}
+                    {availableSkills.map((skill, index) => (
+                      <option key={index} value={skill}>
+                        {skill}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span>{pokemon.skill3 ? pokemon.skill3 : "Not Learned"}</span>
+                )}
+              </div>
+              <div className="info-group">
+                <label>Skill 4:</label>
+                {isEditing ? (
+                  <select
+                    value={editedPokemon.skill4 || ""}
+                    onChange={(e) =>
+                      handleInputChange("skill4", e.target.value)
+                    }
+                    className="edit-input"
+                  >
+                    {(!editedPokemon.skill4 ||
+                      editedPokemon.skill4 === "Not Learned") && (
+                      <option value="">Not Learned</option>
+                    )}
+                    {availableSkills.map((skill, index) => (
+                      <option key={index} value={skill}>
+                        {skill}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <span>{pokemon.skill4 ? pokemon.skill4 : "Not Learned"}</span>
+                )}
+              </div>
             </div>
           </div>
-          <div className="info-section">
-            <div className="info-group">
-              <label>Skill 1:</label>
-              {isEditing ? (
-                <select
-                  value={editedPokemon.skill1 || ""}
-                  onChange={(e) => handleInputChange("skill1", e.target.value)}
-                  className="edit-input"
-                >
-                  {(!editedPokemon.skill1 ||
-                    editedPokemon.skill1 === "Not Learned") && (
-                    <option value="">Not Learned</option>
-                  )}
-                  {availableSkills.map((skill, index) => (
-                    <option key={index} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span>{pokemon.skill1 ? pokemon.skill1 : "Not Learned"}</span>
-              )}
-            </div>
-            <div className="info-group">
-              <label>Skill 2:</label>
-              {isEditing ? (
-                <select
-                  value={editedPokemon.skill2 || ""}
-                  onChange={(e) => handleInputChange("skill2", e.target.value)}
-                  className="edit-input"
-                >
-                  {(!editedPokemon.skill2 ||
-                    editedPokemon.skill2 === "Not Learned") && (
-                    <option value="">Not Learned</option>
-                  )}
-                  {availableSkills.map((skill, index) => (
-                    <option key={index} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span>{pokemon.skill2 ? pokemon.skill2 : "Not Learned"}</span>
-              )}
-            </div>
-            <div className="info-group">
-              <label>Skill 3:</label>
-              {isEditing ? (
-                <select
-                  value={editedPokemon.skill3 || ""}
-                  onChange={(e) => handleInputChange("skill3", e.target.value)}
-                  className="edit-input"
-                >
-                  {(!editedPokemon.skill3 ||
-                    editedPokemon.skill3 === "Not Learned") && (
-                    <option value="">Not Learned</option>
-                  )}
-                  {availableSkills.map((skill, index) => (
-                    <option key={index} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span>{pokemon.skill3 ? pokemon.skill3 : "Not Learned"}</span>
-              )}
-            </div>
-            <div className="info-group">
-              <label>Skill 4:</label>
-              {isEditing ? (
-                <select
-                  value={editedPokemon.skill4 || ""}
-                  onChange={(e) => handleInputChange("skill4", e.target.value)}
-                  className="edit-input"
-                >
-                  {(!editedPokemon.skill4 ||
-                    editedPokemon.skill4 === "Not Learned") && (
-                    <option value="">Not Learned</option>
-                  )}
-                  {availableSkills.map((skill, index) => (
-                    <option key={index} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span>{pokemon.skill4 ? pokemon.skill4 : "Not Learned"}</span>
-              )}
-            </div>
-          </div>
-        </div>
+        )}
         {isOwner && (
           <div className="action-buttons">
             {isEditing ? (
@@ -324,6 +356,15 @@ export default function PokemonDetail() {
                     Cancel
                   </button>
                 </div>
+                <button
+                  className="pokemon-back-button"
+                  onClick={() => navigate(-1)}
+                >
+                  Back
+                </button>
+              </>
+            ) : showDescription ? (
+              <>
                 <button
                   className="pokemon-back-button"
                   onClick={() => navigate(-1)}
