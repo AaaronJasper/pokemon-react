@@ -4,7 +4,7 @@ import { UserContext } from "../../context/UserContext";
 import usePokemonDetail from "../../hooks/usePokemonDetail";
 import PokemonDescription from "./PokemonDescription.jsx";
 import PokemonDetailInfo from "./PokemonDetailInfo.jsx";
-import PokemonDetailButton from "./PokemonDetailButton.jsx";
+import PokemonDetailButtons from "./PokemonDetailButtons.jsx";
 
 export default function PokemonDetail() {
   const { id } = useParams();
@@ -190,7 +190,7 @@ export default function PokemonDetail() {
             handleInputChange={handleInputChange}
           />
         )}
-        <PokemonDetailButton
+        <PokemonDetailButtons
           isEditing={isEditing}
           isOwner={isOwner}
           handleSave={handleSave}

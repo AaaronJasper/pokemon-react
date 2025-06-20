@@ -7,6 +7,7 @@ import { UserContext } from "../../context/UserContext";
 import Pagination from "../common/Pagination";
 import SendVerifyEmail from "../auth/SendVerifyEmail";
 import useSortedData from "../../hooks/useSortedData";
+import PokemonActionButtons from "./PokemonActionButtons";
 
 export default function App() {
   const { pokemons } = useAllPokemons();
@@ -178,25 +179,7 @@ export default function App() {
         </div>
       </header>
 
-      {currentUser && (
-        <div className="create-buttons-container">
-          <Link to="/create_pokemon" className="create-button">
-            Create New Pokémon {"\u002B"}
-          </Link>
-          <Link to="/create_pokemon_trait/nature" className="create-button">
-            Create New Nature {"\u002B"}
-          </Link>
-          <Link to="/create_pokemon_trait/ability" className="create-button">
-            Create New Ability {"\u002B"}
-          </Link>
-          <Link to="/trade" className="create-trade-button">
-            Trade {"\u002B"}
-          </Link>
-          <Link to="/trade_history" className="create-trade-button">
-            Trade History
-          </Link>
-        </div>
-      )}
+      {currentUser && <PokemonActionButtons />}
 
       {filteredPokemons.length === 0 ? (
         <div className="no-results">
