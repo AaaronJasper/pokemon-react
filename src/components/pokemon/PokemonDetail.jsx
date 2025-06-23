@@ -24,14 +24,14 @@ export default function PokemonDetail() {
     clearError,
   } = usePokemonDetail(id);
 
+  const isOwner = currentUser && pokemon && currentUser.id === pokemon.user_id;
+
   // Set editedPokemon when pokemon data is loaded
   useEffect(() => {
     if (pokemon) {
       setEditedPokemon(pokemon);
     }
   }, [pokemon]);
-
-  const isOwner = currentUser && currentUser.id === pokemon.user_id;
 
   const handleEdit = () => {
     setIsEditing(true);
