@@ -424,6 +424,26 @@
   transform: translateY(-2px);
 }
 
+.ranking-button {
+  margin: 0 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  background-color: #f06292;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: "Poppins", "Segoe UI", "Arial", sans-serif;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.ranking-button:hover {
+  background-color: #ec407a;
+  transform: translateY(-2px);
+}
+
 .trade-button {
   width: 100px;
   height: 100px;

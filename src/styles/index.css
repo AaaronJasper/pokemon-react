@@ -464,3 +464,75 @@ body {
   line-height: 1.5;
   color: #444;
 }
+
+.pokemon-ranking-logo {
+  width: 200px;
+  margin: 20px 0;
+}
+
+.pokemon-ranking-stage {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.pokemon-ranking-podium-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 32px;
+  margin-bottom: 40px;
+  min-height: 260px;
+}
+
+.pokemon-ranking-podium-slot {
+  flex: 1;
+  display: flex;
+}
+
+.pokemon-ranking-slot-left {
+  justify-content: flex-end;
+}
+
+.pokemon-ranking-slot-center {
+  justify-content: center;
+}
+
+.pokemon-ranking-slot-right {
+  justify-content: flex-start;
+}
+
+.pokemon-ranking-card-wrapper {
+  position: relative;
+  width: 220px;
+}
+
+.pokemon-ranking-card-first {
+  width: 260px;
+  transform: scale(1.15);
+  z-index: 1;
+}
+
+.pokemon-ranking-card-second {
+  margin-top: 40px;
+  transform: scale(0.95);
+}
+
+.pokemon-ranking-card-third {
+  margin-top: 60px;
+  transform: scale(0.9);
+}
+
+.pokemon-ranking-rest-row {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 12px 0;
+  justify-content: center;
+}
+
+.pokemon-ranking-rest-card {
+  position: relative;
+  min-width: 200px;
+}

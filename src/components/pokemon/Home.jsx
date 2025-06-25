@@ -179,7 +179,7 @@ export default function App() {
         </div>
       </header>
 
-      {currentUser && <PokemonActionButtons />}
+      {<PokemonActionButtons currentUser={currentUser} />}
 
       {filteredPokemons.length === 0 ? (
         <div className="no-results">
