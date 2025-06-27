@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-export default function PokemonDescription({ pokemon }) {
-  const [description, setDescription] = useState("");
+export default function PokemonDescription({
+  pokemon,
+  description,
+  setDescription,
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!pokemon?.id) return;
+    if (!pokemon?.id || description !== null) return;
 
     setLoading(true);
     setError(null);
@@ -32,7 +35,7 @@ export default function PokemonDescription({ pokemon }) {
       .finally(() => {
         setLoading(false);
       });
-  }, [pokemon]);
+  }, [pokemon, description]);
 
   if (error) {
     return <div className="error-message">{error}</div>;

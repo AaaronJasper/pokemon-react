@@ -13,6 +13,7 @@ export default function PokemonDetail() {
   const [showDescription, setShowDescription] = useState(false);
   const [editedPokemon, setEditedPokemon] = useState(null);
   const [currentUser, setCurrentUser] = useContext(UserContext);
+  const [description, setDescription] = useState(null);
   const {
     pokemon,
     loading,
@@ -180,7 +181,12 @@ export default function PokemonDetail() {
         )}
         {pokemonImage && <img src={pokemonImage} alt={pokemon.name} />}
         {showDescription && !isEditing ? (
-          <PokemonDescription key={pokemon.id} pokemon={pokemon} />
+          <PokemonDescription
+            key={pokemon.id}
+            pokemon={pokemon}
+            description={description}
+            setDescription={setDescription}
+          />
         ) : (
           <PokemonDetailInfo
             pokemon={pokemon}
