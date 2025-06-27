@@ -9,7 +9,7 @@ export default function PokemonDescription({
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!pokemon?.id || description !== null) return;
+    if (!pokemon?.id || description !== "") return;
 
     setLoading(true);
     setError(null);

@@ -13,7 +13,7 @@ export default function PokemonDetail() {
   const [showDescription, setShowDescription] = useState(false);
   const [editedPokemon, setEditedPokemon] = useState(null);
   const [currentUser, setCurrentUser] = useContext(UserContext);
-  const [description, setDescription] = useState(null);
+  const [description, setDescription] = useState("");
   const {
     pokemon,
     loading,
