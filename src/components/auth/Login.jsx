@@ -62,7 +62,11 @@ export default function Login() {
           isVerify: data.data.isVerify,
         };
 
+        const now = new Date();
+        const expiry = now.getTime() + 3 * 24 * 60 * 60 * 1000;
+
         localStorage.setItem("token", userData.token);
+        localStorage.setItem("expiry", expiry);
         localStorage.setItem("user", JSON.stringify(userData));
 
         setUser(userData);

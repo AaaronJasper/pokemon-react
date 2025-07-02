@@ -75,8 +75,12 @@ export default function Register() {
           name: data.data.user,
           token: data.data.token,
         };
+        const now = new Date();
+        const expiry = now.getTime() + 3 * 24 * 60 * 60 * 1000;
+
         // Store token and user data in local storage
         localStorage.setItem("token", userData.token);
+        localStorage.setItem("expiry", expiry);
         localStorage.setItem("user", JSON.stringify(userData));
 
         setUser(userData);

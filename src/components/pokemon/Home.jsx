@@ -50,10 +50,10 @@ export default function App() {
         return response.json();
       })
       .then((data) => {
-        // Clear all user data from local storage
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-        localStorage.removeItem("userId"); // Remove user ID specifically if it exists
+        localStorage.removeItem("expiry");
+        localStorage.removeItem("userId");
         // Update state
         setCurrentUser(null);
         setOwnPokemons(false);
@@ -61,10 +61,9 @@ export default function App() {
         navigate("/");
       })
       .catch((error) => {
-        // Even if the API call fails, we still want to clear the local local
         localStorage.removeItem("user");
         localStorage.removeItem("token");
-        localStorage.removeItem("userId"); // Remove user ID specifically if it exists
+        localStorage.removeItem("userId");
         setCurrentUser(null);
         setOwnPokemons(false);
         navigate("/");

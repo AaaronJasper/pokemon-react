@@ -6,12 +6,25 @@ export default function useAuthUser() {
   useEffect(() => {
     // Get current user from local storage
     const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
+    const expiry = localStorage.getItem("expiry");
+
+    const now = new Date().getTime();
+    const expiryTime = parseInt(expiry, 10);
+
+    if (userData && expiry) {
+      if (now < expiryTime) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          setUser(parsedUser);
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+          setUser(null);
+        }
+      } else {
+        // expired
+        localStorage.removeItem("user");
+        localStorage.removeItem("expiry");
+        localStorage.removeItem("user");
         setUser(null);
       }
     }
