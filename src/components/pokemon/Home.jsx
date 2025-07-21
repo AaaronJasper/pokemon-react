@@ -4,10 +4,12 @@ import Pokemon from "./Pokemon";
 import logo from "../../../public/International_Pokemon_logo.svg.png";
 import useAllPokemons from "../../hooks/useAllPokemons";
 import { UserContext } from "../../context/UserContext";
+import { TradeNotificationContext } from "../../context/TradeNotificationContext";
 import Pagination from "../common/Pagination";
 import SendVerifyEmail from "../auth/SendVerifyEmail";
 import useSortedData from "../../hooks/useSortedData";
 import PokemonActionButtons from "./PokemonActionButtons";
+import socket from "../socket";
 
 export default function App() {
   const { pokemons } = useAllPokemons();
@@ -20,12 +22,18 @@ export default function App() {
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [currentUser, setCurrentUser] = useContext(UserContext);
+  const [latestTradeUpdate, setLatestTradeUpdate] = useContext(
+    TradeNotificationContext
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
   const navigate = useNavigate();
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = currentPage * itemsPerPage;
   const searchRef = useRef();
+  const tradeUpdated =
+    localStorage.getItem("hasTradeNotification") === "true" &&
+    latestTradeUpdate !== null;
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -95,6 +103,12 @@ export default function App() {
     .map((pokemon) => {
       return <Pokemon key={pokemon.id} pokemon={pokemon} user={currentUser} />;
     });
+
+  useEffect(() => {
+    if (latestTradeUpdate && latestTradeUpdate.status) {
+      localStorage.setItem("hasTradeNotification", "true");
+    }
+  }, [latestTradeUpdate]);
 
   useEffect(() => {
     searchRef.current.focus();
@@ -178,7 +192,12 @@ export default function App() {
         </div>
       </header>
 
-      {<PokemonActionButtons currentUser={currentUser} />}
+      {
+        <PokemonActionButtons
+          currentUser={currentUser}
+          tradeUpdated={tradeUpdated}
+        />
+      }
 
       {filteredPokemons.length === 0 ? (
         <div className="no-results">

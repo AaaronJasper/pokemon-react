@@ -4,6 +4,7 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { RefreshCcw } from "lucide-react";
 import useAllPokemons from "../../hooks/useAllPokemons";
 import { UserContext } from "../../context/UserContext";
+import { TradeNotificationContext } from "../../context/TradeNotificationContext";
 
 export default function TradePokemon() {
   const { pokemons } = useAllPokemons();
@@ -12,6 +13,9 @@ export default function TradePokemon() {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const [currentUser, setCurrentUser] = useContext(UserContext);
+  const [latestTradeUpdate, setLatestTradeUpdate] = useContext(
+    TradeNotificationContext
+  );
   const [tradePokemon, setTradePokemon] = useState(null);
   const [partnerPokemon, setPartnerPokemon] = useState(null);
 
@@ -73,6 +77,7 @@ export default function TradePokemon() {
         receiver_id: result.data.receiver_id,
         sender_pokemon_id: result.data.sender_pokemon_id,
         receiver_pokemon_id: result.data.receiver_pokemon_id,
+        status: result.data.status,
       });
       alert("Initiate trade successful!");
     } catch (err) {
@@ -158,6 +163,15 @@ export default function TradePokemon() {
     }
   };
 
+  function clearTradeState() {
+    localStorage.removeItem("hasTradeNotification");
+    localStorage.removeItem("lastTradeUpdate");
+    setLatestTradeUpdate(null);
+    setTrade({});
+    setTradePokemon(null);
+    setPartnerPokemon(null);
+  }
+
   useEffect(() => {
     if (location.state?.ownPokemon) {
       setTradePokemon(location.state.ownPokemon);
@@ -169,6 +183,10 @@ export default function TradePokemon() {
 
   useEffect(() => {
     const fetchTrade = async () => {
+      if (latestTradeUpdate || (trade && trade.id !== undefined)) {
+        return;
+      }
+
       setLoading(true);
       const token = localStorage.getItem("token");
 
@@ -187,13 +205,16 @@ export default function TradePokemon() {
 
         const result = await res.json();
 
-        setTrade({
-          id: result.data.id,
-          sender_id: result.data.sender_id,
-          receiver_id: result.data.receiver_id,
-          sender_pokemon_id: result.data.sender_pokemon_id,
-          receiver_pokemon_id: result.data.receiver_pokemon_id,
-        });
+        if (result?.data?.id) {
+          setTrade({
+            id: result.data.id,
+            sender_id: result.data.sender_id,
+            receiver_id: result.data.receiver_id,
+            sender_pokemon_id: result.data.sender_pokemon_id,
+            receiver_pokemon_id: result.data.receiver_pokemon_id,
+            status: result.data.status,
+          });
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -202,7 +223,27 @@ export default function TradePokemon() {
     };
 
     fetchTrade();
-  }, []);
+  }, [latestTradeUpdate]);
+
+  useEffect(() => {
+    if (!latestTradeUpdate?.trade) return;
+
+    console.log(latestTradeUpdate);
+    console.log(0);
+
+    setTrade({
+      id: latestTradeUpdate.trade_id,
+      sender_id: latestTradeUpdate.trade.sender_id,
+      receiver_id: latestTradeUpdate.trade.receiver_id,
+      sender_pokemon_id: latestTradeUpdate.trade.sender_pokemon_id,
+      receiver_pokemon_id: latestTradeUpdate.trade.receiver_pokemon_id,
+      status: latestTradeUpdate.status,
+    });
+  }, [latestTradeUpdate]);
+
+  useEffect(() => {
+    console.log("✅ 最新 trade 狀態：", trade);
+  }, [trade]);
 
   useEffect(() => {
     if (trade && trade.id !== undefined && pokemons.length > 0) {
@@ -345,13 +386,37 @@ export default function TradePokemon() {
               </div>
             ) : (
               <div className="trade-button-group">
-                <p className="pending-text">Waiting response...</p>
-                <button
-                  className="trade-button reject-button"
-                  onClick={rejectTrade}
-                >
-                  Cancel
-                </button>
+                {trade.status === "completed" ? (
+                  <>
+                    <p className="pending-text">✅ Trade completed!</p>
+                    <button
+                      className="trade-button reject-button"
+                      onClick={clearTradeState}
+                    >
+                      Close
+                    </button>
+                  </>
+                ) : trade.status === "rejected" ? (
+                  <>
+                    <p className="pending-text">❌ Trade was rejected</p>
+                    <button
+                      className="trade-button reject-button"
+                      onClick={clearTradeState}
+                    >
+                      Dismiss
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p className="pending-text">⏳ Waiting response...</p>
+                    <button
+                      className="trade-button reject-button"
+                      onClick={rejectTrade}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
               </div>
             )}
             {partnerPokemon && (

@@ -57,4 +57,14 @@
   justify-content: center;
   gap: 1rem;
   margin: 2rem 0;
-} 
+}
+
+.red-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}

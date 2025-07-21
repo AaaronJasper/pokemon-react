@@ -417,11 +417,24 @@
   text-decoration: none;
   font-family: "Poppins", "Segoe UI", "Arial", sans-serif;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
 }
 
 .create-trade-button:hover {
   background-color: #04abd1;
   transform: translateY(-2px);
+}
+
+.red-dot {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white;
+  pointer-events: none;
 }
 
 .ranking-button {
