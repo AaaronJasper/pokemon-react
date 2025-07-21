@@ -5,11 +5,10 @@ export default function useTradeNotification(user) {
   const [latestTradeUpdate, setLatestTradeUpdate] = useState(null);
 
   useEffect(() => {
-    console.log("🧠 user in useTradeNotification:", user);
-
     if (!user || !user.id) return;
 
-    const storedData = localStorage.getItem("lastTradeUpdate");
+    const userKey = `user_${user.id}`;
+    const storedData = localStorage.getItem(`${userKey}_lastTradeUpdate`);
     if (storedData) {
       try {
         setLatestTradeUpdate(JSON.parse(storedData));
@@ -18,21 +17,23 @@ export default function useTradeNotification(user) {
       }
     }
 
-    socket.on("TradeStatusUpdated", (data) => {
+    const handler = (data) => {
+      if (data.trade.sender_id !== user.id) return;
+
       console.log("📦 收到 TradeStatusUpdated 訊息:", data);
-
-      localStorage.setItem("hasTradeNotification", "true");
-      localStorage.setItem("lastTradeUpdate", JSON.stringify(data));
-
+      localStorage.setItem(`${userKey}_hasTradeNotification`, "true");
+      localStorage.setItem(`${userKey}_lastTradeUpdate`, JSON.stringify(data));
       setLatestTradeUpdate(data);
-    });
+    };
+
+    socket.on("TradeStatusUpdated", handler);
 
     const room = `trades.${user.id}`;
-
     socket.emit("join", room);
-    console.log("join channel".room);
+    console.log("🧩 join channel", room);
 
     return () => {
+      socket.off("TradeStatusUpdated", handler);
       socket.emit("leave", room);
     };
   }, [user]);

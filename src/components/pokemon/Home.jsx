@@ -32,7 +32,9 @@ export default function App() {
   const endIndex = currentPage * itemsPerPage;
   const searchRef = useRef();
   const tradeUpdated =
-    localStorage.getItem("hasTradeNotification") === "true" &&
+    currentUser?.id &&
+    localStorage.getItem(`user_${currentUser.id}_hasTradeNotification`) ===
+      "true" &&
     latestTradeUpdate !== null;
 
   const handleSearch = (e) => {

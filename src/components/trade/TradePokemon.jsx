@@ -164,8 +164,11 @@ export default function TradePokemon() {
   };
 
   function clearTradeState() {
-    localStorage.removeItem("hasTradeNotification");
-    localStorage.removeItem("lastTradeUpdate");
+    if (currentUser && currentUser.id) {
+      const keyPrefix = `user_${currentUser.id}`;
+      localStorage.removeItem(`${keyPrefix}_hasTradeNotification`);
+      localStorage.removeItem(`${keyPrefix}_lastTradeUpdate`);
+    }
     setLatestTradeUpdate(null);
     setTrade({});
     setTradePokemon(null);
