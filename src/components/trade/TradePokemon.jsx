@@ -113,6 +113,12 @@ export default function TradePokemon() {
         setError(result.message);
         return;
       }
+      if (currentUser && currentUser.id) {
+        const keyPrefix = `user_${currentUser.id}`;
+        localStorage.removeItem(`${keyPrefix}_hasTradeNotification`);
+        localStorage.removeItem(`${keyPrefix}_lastTradeUpdate`);
+      }
+      setLatestTradeUpdate(null);
       setTrade({});
       setTradePokemon(null);
       setPartnerPokemon(null);
@@ -152,6 +158,12 @@ export default function TradePokemon() {
         setError(result.message);
         return;
       }
+      if (currentUser && currentUser.id) {
+        const keyPrefix = `user_${currentUser.id}`;
+        localStorage.removeItem(`${keyPrefix}_hasTradeNotification`);
+        localStorage.removeItem(`${keyPrefix}_lastTradeUpdate`);
+      }
+      setLatestTradeUpdate(null);
       setTrade({});
       setTradePokemon(null);
       setPartnerPokemon(null);

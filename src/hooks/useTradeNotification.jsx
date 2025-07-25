@@ -3,6 +3,7 @@ import socket from "../components/socket";
 
 export default function useTradeNotification(user) {
   const [latestTradeUpdate, setLatestTradeUpdate] = useState(null);
+  const [receiverTrigger, setReceiverTrigger] = useState(0);
 
   useEffect(() => {
     if (!user || !user.id) return;
@@ -18,12 +19,27 @@ export default function useTradeNotification(user) {
     }
 
     const handler = (data) => {
-      if (data.trade.sender_id !== user.id) return;
+      if (
+        data.trade.sender_id !== user.id &&
+        data.trade.receiver_id !== user.id
+      )
+        return;
 
-      console.log("📦 收到 TradeStatusUpdated 訊息:", data);
-      localStorage.setItem(`${userKey}_hasTradeNotification`, "true");
-      localStorage.setItem(`${userKey}_lastTradeUpdate`, JSON.stringify(data));
-      setLatestTradeUpdate(data);
+      if (data.trade.sender_id == user.id) {
+        console.log("📦 收到 TradeStatusUpdated 訊息:", data);
+        localStorage.setItem(`${userKey}_hasTradeNotification`, "true");
+        localStorage.setItem(
+          `${userKey}_lastTradeUpdate`,
+          JSON.stringify(data)
+        );
+        setLatestTradeUpdate(data);
+      }
+      if (data.trade.receiver_id == user.id) {
+        console.log("📦 收到 TradeStatusUpdated 訊息:", data);
+        localStorage.setItem(`${userKey}_hasTradeNotification`, "true");
+        setLatestTradeUpdate(null);
+        setReceiverTrigger((prev) => prev + 1);
+      }
     };
 
     socket.on("TradeStatusUpdated", handler);

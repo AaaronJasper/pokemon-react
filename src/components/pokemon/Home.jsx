@@ -9,7 +9,6 @@ import Pagination from "../common/Pagination";
 import SendVerifyEmail from "../auth/SendVerifyEmail";
 import useSortedData from "../../hooks/useSortedData";
 import PokemonActionButtons from "./PokemonActionButtons";
-import socket from "../socket";
 
 export default function App() {
   const { pokemons } = useAllPokemons();
@@ -31,11 +30,16 @@ export default function App() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = currentPage * itemsPerPage;
   const searchRef = useRef();
-  const tradeUpdated =
+  const hasNotification =
     currentUser?.id &&
     localStorage.getItem(`user_${currentUser.id}_hasTradeNotification`) ===
-      "true" &&
-    latestTradeUpdate !== null;
+      "true";
+
+  const isSender = latestTradeUpdate?.trade?.sender_id === currentUser?.id;
+
+  const senderTradeUpdated = hasNotification && isSender;
+
+  const receiverTradeUpdated = hasNotification && !isSender;
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -197,7 +201,7 @@ export default function App() {
       {
         <PokemonActionButtons
           currentUser={currentUser}
-          tradeUpdated={tradeUpdated}
+          tradeUpdated={senderTradeUpdated || receiverTradeUpdated}
         />
       }
 
