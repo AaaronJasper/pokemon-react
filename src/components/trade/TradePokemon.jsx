@@ -175,17 +175,49 @@ export default function TradePokemon() {
     }
   };
 
-  function clearTradeState() {
-    if (currentUser && currentUser.id) {
-      const keyPrefix = `user_${currentUser.id}`;
-      localStorage.removeItem(`${keyPrefix}_hasTradeNotification`);
-      localStorage.removeItem(`${keyPrefix}_lastTradeUpdate`);
+  const clearTradeState = async () => {
+    setLoading(true);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/trade/${trade.id}/mark-as-read`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.message || "Trade failed");
+      }
+
+      const result = await response.json();
+      if (result.code !== 200) {
+        setError(result.message);
+        return;
+      }
+
+      if (currentUser && currentUser.id) {
+        const keyPrefix = `user_${currentUser.id}`;
+        localStorage.removeItem(`${keyPrefix}_hasTradeNotification`);
+        localStorage.removeItem(`${keyPrefix}_lastTradeUpdate`);
+      }
+      setLatestTradeUpdate(null);
+      setTrade({});
+      setTradePokemon(null);
+      setPartnerPokemon(null);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      alert(err.message);
     }
-    setLatestTradeUpdate(null);
-    setTrade({});
-    setTradePokemon(null);
-    setPartnerPokemon(null);
-  }
+  };
 
   useEffect(() => {
     if (location.state?.ownPokemon) {
@@ -243,9 +275,6 @@ export default function TradePokemon() {
   useEffect(() => {
     if (!latestTradeUpdate?.trade) return;
 
-    console.log(latestTradeUpdate);
-    console.log(0);
-
     setTrade({
       id: latestTradeUpdate.trade_id,
       sender_id: latestTradeUpdate.trade.sender_id,
@@ -254,6 +283,9 @@ export default function TradePokemon() {
       receiver_pokemon_id: latestTradeUpdate.trade.receiver_pokemon_id,
       status: latestTradeUpdate.status,
     });
+    // console.log(latestTradeUpdate);
+    // console.log("yes");
+    // console.log(trade);
   }, [latestTradeUpdate]);
 
   useEffect(() => {
@@ -384,6 +416,7 @@ export default function TradePokemon() {
                 <p>Owner: {tradePokemon.user}</p>
               </div>
             )}
+
             {currentUser.id == trade.receiver_id ? (
               <div className="trade-button-group">
                 <button
@@ -401,7 +434,7 @@ export default function TradePokemon() {
               </div>
             ) : (
               <div className="trade-button-group">
-                {trade.status === "completed" ? (
+                {trade.status === "completed" || trade.status === "accepted" ? (
                   <>
                     <p className="pending-text">✅ Trade completed!</p>
                     <button
@@ -434,6 +467,7 @@ export default function TradePokemon() {
                 )}
               </div>
             )}
+
             {partnerPokemon && (
               <div className="trade-pokemon-card">
                 <img src={partnerPokemon.image_url} alt={partnerPokemon.name} />
