@@ -1,12 +1,40 @@
-# React + Vite
+# Pokémon React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Pokémon management frontend built with React. This application interacts with the Pokémon Laravel backend API to display, search, and manage Pokémon data.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Pokémon Display**: View Pokémon data including images, level, abilities, and ownership.
+- **Search & Filter**: Search Pokémon by name, type, or level.
+- **User Authentication**: Login, logout, and register (connected to the backend).
+- **Edit & Manage Pokémon**: Update Pokémon information if you are the owner.
+- **Responsive Design**: Works on both desktop and mobile devices.
+- **API Integration**: Fetches Pokémon data from the Laravel backend and PokeAPI.
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Tech Stack
+
+- **Frontend**: React 19.x
+- **Routing**: React Router v6
+- **HTTP Requests**: Fetch API
+- **Real-time Notifications**: Connected to backend WebSockets
+
+---
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/AaaronJasper/pokemon-react.git
+cd pokemon-react
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
